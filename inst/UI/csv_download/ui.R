@@ -22,7 +22,7 @@ fluidPage(
 
        leafletOutput(outputId = "gps_files"), 
 
-       uiOutput("contents")
+       uiOutput("track_summary")
      )
    )
  )

@@ -41,34 +41,25 @@ function(input, output, session) {
 
   })
 
-   output$track_summary <- renderUI({
+   output$track_summary <- function() {
 
    req(input$garmin_dir)
 
-    o = paste(
+    trk_tab = 
       df()$trk |>
-        track_summary() |>
-        gt() |>
-        fmt_number() |>
-        tab_header(title = md("Tracks")) |>
-        opt_interactive(use_compact_mode = TRUE) |>
-        as_raw_html()
-      ,
+      track_summary() |>
+      kable(caption = "Track", digits =2)
+
+    trk_pts =
       df()$pts |>
-        points_summary() |>
-        gt() |>
-        fmt_number() |>
-        tab_header(title = md("Points")) |>
-        opt_interactive(use_compact_mode = TRUE) |>
-        as_raw_html()
-    , collapse = "<hr>")
-    
-    print(o)
+      points_summary() |>
+      kable(caption = "Points", digits = 2)
 
-    HTML(o)
+    kables(list(trk_tab, trk_pts), format = "html") |>
+    kable_styling("striped", full_width = FALSE)
 
 
-  })
+  }
 
   
  }

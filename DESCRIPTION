@@ -13,13 +13,14 @@ Imports:
     methods,
     glue,
     stringr,
-    sf,
-    gt
+    sf
 Suggests:
     leaflet,    
     shinyWidgets,
     gridlayout,
-    bslib
+    bslib,
+    knitr,
+    kableExtra
 Remotes:
     rstudio/gridlayout
 License: GPL (>= 2)

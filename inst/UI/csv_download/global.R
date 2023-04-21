@@ -1,6 +1,7 @@
 
 # ==========================================================================
 # UI for fetching, visualising and exporting GPS data
+# ~/github/mpio-be/gpxui/inst/Garmin65s
 #' shiny::runApp('./inst/UI/csv_download', launch.browser =  TRUE)
 # ==========================================================================
 
@@ -10,6 +11,8 @@
     "leaflet",
     "shinyWidgets",
     "gridlayout",
-    "bslib"
+    "bslib", 
+    "knitr",
+    "kableExtra"
   ), require, character.only = TRUE, quietly = TRUE)
   tags <- shiny::tags
