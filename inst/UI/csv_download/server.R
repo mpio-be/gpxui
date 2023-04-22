@@ -43,20 +43,25 @@ function(input, output, session) {
 
    output$track_summary <- function() {
 
-   req(input$garmin_dir)
+    req(input$garmin_dir)
 
-    trk_tab = 
+    # assign("X", df(), .GlobalEnv); df = function() {X}
+
+
+    trk_tab =
       df()$trk |>
       track_summary() |>
-      kable(caption = "Track", digits =2)
+      kbl(caption = "Track", digits = 2) |>
+      kable_material(lightable_options = "striped")
 
     trk_pts =
       df()$pts |>
       points_summary() |>
-      kable(caption = "Points", digits = 2)
+      kbl(caption = "Points", digits = 2) |>
+      kable_material(lightable_options = "striped")
 
-    kables(list(trk_tab, trk_pts), format = "html") |>
-    kable_styling("striped", full_width = FALSE)
+    
+    HTML(trk_tab, trk_pts)
 
 
   }

@@ -1,4 +1,5 @@
 
+options(shiny.maxRequestSize = 10 * 1024^3)
 
 fluidPage(
 

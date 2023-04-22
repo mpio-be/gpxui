@@ -100,15 +100,22 @@ track_summary <- function(x) {
   o[, dist := sf::st_length(x) |> units::set_units("km")]
   o[, deltat := difftime(max_dt, min_dt, units = "hours")]
 
-  o[, .(
-    mean_elevation = weighted.mean(mean_ele, w = n),
-    max_elevation = max(max_ele),
-    min_elevation = min(max_ele),
-    start = min(min_dt),
-    stop = max(max_dt),
-    hours = sum(deltat),
-    avg_speed_kmh = weighted.mean(as.numeric(dist) / as.numeric(deltat), w = n)
+  o = o[, .(
+    `mean elevation` = weighted.mean(mean_ele, w = n) |> round(2) |> as.character(),
+    `max elevation` = max(max_ele) |> round(2) |> as.character(),
+    `min elevation` = min(max_ele) |> round(2) |> as.character(),
+    `start hour` = min(min_dt) |> format("%H:%M"),
+    `stop hour` = max(max_dt) |> format("%H:%M"),
+    `avg speed (km/hour)` = weighted.mean(as.numeric(dist) / as.numeric(deltat), w = n) |>
+      round(2) |>
+      as.character()
   )]
+
+  o[, i := 1]
+  o = melt(o, id.vars = "i")[, i := NULL]
+
+  o
+
 }
 
 #' @export
@@ -120,7 +127,19 @@ points_summary <- function(x) {
     sf::st_area() |>
     units::set_units("km^2")
 
-  data.table(N_points = nrow(x), covered_area_sqkm = h)
+  o = data.table(
+    `N_points` = nrow(x) |> as.character(),
+    `first point` = x$gps_point[1] |> as.character(), 
+    `last point` = x$gps_point[nrow(x)] |> as.character(), 
+    `Area covered (km²)` = round(h, 2) |> as.character()
+  )
+  
+  o[, i := 1]
+  o = melt(o, id.vars = "i")[, i := NULL]
+
+  o
+
+
 
 
 }
