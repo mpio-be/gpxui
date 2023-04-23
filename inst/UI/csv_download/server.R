@@ -6,7 +6,7 @@ function(input, output, session) {
 
   df <- reactive({
   
-      gpsid <- 1 # read_gpsID(allff[grep("startup.txt$", name)]$datapath)
+      gpsid <- 1 # deviceID(allff[grep("startup.txt$", name)]$datapath)
       pts <- read_all_waypoints(input$garmin_dir$datapath, sf = TRUE)
       trk <- read_all_tracks(input$garmin_dir$datapath, sf = TRUE)
     

@@ -1,15 +1,11 @@
 
-#' read_gpsID
-#' @param p path to startup.txt
+#' deviceID
+#' @param x path to where the device ID is stored
 #' @export
 #' @examples
-#' p <- system.file(package = "gpxui", "Garmin65s", "Garmin", "startup.txt")
+#' p <- system.file(package = "gpxui", "Garmin65s", "GPX", "DEVICE_ID.txt")
 
-garminID <- function(p) {
-
-  o = readLines(p)
-  o = o[str_detect(toupper(o), "GPS")]
-
-  eval(parse(text = o))
-
+deviceID <- function(p) {
+  readLines(p)[1] |>
+  as.numeric()
 }
