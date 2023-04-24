@@ -7,7 +7,7 @@
 deviceID(p)
 }
 \arguments{
-\item{p}{path to where the device ID is stored}
+\item{x}{path to where the device ID is stored}
 }
 \description{
 deviceID
