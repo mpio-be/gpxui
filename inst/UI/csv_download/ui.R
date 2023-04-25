@@ -3,19 +3,27 @@
 
 fluidPage(
 
+  useShinyjs(), 
 
   tags$head(
     tags$style(
       HTML(
         ".leaflet-tooltip {
-           background-color: transparent;
-           border: none;
-         }
-        "
+            background-color: transparent;
+            border: none;
+          }
+          "
       )
-    ) ),
+    )
+  ),
+
+# garmin_dir_progress
 
    sidebarLayout(
+
+
+
+
      sidebarPanel(
        dirInput("garmin_dir", "Choose dir")
      ),
@@ -26,4 +34,6 @@ fluidPage(
        uiOutput("track_summary")
      )
    )
+
+
  )

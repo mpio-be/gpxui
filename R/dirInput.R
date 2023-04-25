@@ -38,22 +38,12 @@ dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = 
     name            = inputId, 
     type            = "file", 
     webkitdirectory = TRUE, 
-    onchange        = "pressed()",
+    # onchange        = "directorySelected(event)",
     style           = "display: none;"
   )
 
 
   div(
-
-    tags$script(HTML(paste0(
-    "
-    // TODO: onchange function to show feedback when 'Maximum upload size exceeded'
-    
-    "
-    )))
-
-    ,
-
 
     class = "form-group shiny-input-container", 
     style = htmltools::css(width = validateCssUnit(width)),
@@ -81,7 +71,7 @@ dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = 
       tags$div(
         id = paste(inputId, "_progress", sep = ""),
         class = "progress active shiny-file-input-progress",
-        tags$div(class = "progress-bar")
+        tags$div(class = "progress-bar", id = "XXX")
       )
   )
 

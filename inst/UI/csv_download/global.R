@@ -12,6 +12,7 @@
     "shinyWidgets",
     "gridlayout",
     "bslib", 
-    "kableExtra"
+    "kableExtra", 
+    "shinyjs"
   ), require, character.only = TRUE, quietly = TRUE)
   tags <- shiny::tags

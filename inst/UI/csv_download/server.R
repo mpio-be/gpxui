@@ -67,5 +67,12 @@ function(input, output, session) {
   }
 
 
+  observeEvent(input$garmin_dir, ignoreNULL = FALSE, ignoreInit = TRUE, {
+    
+    if(is.null(input$garmin_dir))
+    shinyjs::html(id = "garmin_dir_progress", html = "xxxx", add = TRUE)
+  
+  })
+
   
  }
