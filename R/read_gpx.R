@@ -53,12 +53,7 @@ read_all_waypoints <- function(ff,int_names_only = TRUE, sf = FALSE) {
        o = st_as_sf(o, coords = c("lon", "lat"), crs = 4326)
      }
    } else {
-     o = data.table()
-    if(sf)
-      o = st_point() |>
-        st_sfc() |>
-        st_sf()
-
+     o = NULL
   }
 
 
@@ -86,15 +81,9 @@ read_all_tracks <- function(ff, sf = FALSE) {
        o <- dt2lines(o, "seg_id")
      }
 
-
-     } else {
-      o = data.table()
-      if(sf)
-        o = st_line() |>
-          st_sfc() |>
-          st_sf()
-
-  }
+     } else  {
+        o = NULL
+    }
 
    o
 

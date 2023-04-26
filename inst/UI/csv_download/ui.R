@@ -21,17 +21,20 @@ fluidPage(
 
    sidebarLayout(
 
-
-
-
      sidebarPanel(
-       dirInput("garmin_dir", "Choose dir")
+       dirInput("garmin_dir", "Choose dir"), 
+
+       uiOutput("file_upload_feedback")
      ),
      mainPanel(
 
-       leafletOutput(outputId = "gps_files"), 
+       leafletOutput(outputId = "MAP"), 
 
        uiOutput("track_summary")
+       
+       
+
+
      )
    )
 

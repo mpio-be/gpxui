@@ -15,7 +15,8 @@ Imports:
     stringr,
     sf
 Suggests:
-    leaflet,    
+    leaflet,
+    leaflet.extras,    
     shinyWidgets,
     gridlayout,
     bslib,

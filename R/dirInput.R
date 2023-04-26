@@ -28,10 +28,6 @@
 #' shinyApp(ui, server)
 
 dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = "Browse...", placeholder = "No files selected.") {
-
-
-
-
   
   inputTag <- tags$input(
     id              = inputId, 
@@ -71,7 +67,7 @@ dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = 
       tags$div(
         id = paste(inputId, "_progress", sep = ""),
         class = "progress active shiny-file-input-progress",
-        tags$div(class = "progress-bar", id = "XXX")
+        tags$div(class = "progress-bar")
       )
   )
 

@@ -9,10 +9,10 @@
   sapply(c(
     "gpxui",
     "leaflet",
+    "leaflet.extras",
     "shinyWidgets",
     "gridlayout",
     "bslib", 
-    "kableExtra", 
-    "shinyjs"
+    "kableExtra"
   ), require, character.only = TRUE, quietly = TRUE)
   tags <- shiny::tags
