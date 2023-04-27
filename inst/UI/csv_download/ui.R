@@ -3,7 +3,6 @@
 
 fluidPage(
 
-  useShinyjs(), 
 
   tags$head(
     tags$style(
@@ -24,7 +23,10 @@ fluidPage(
      sidebarPanel(
        dirInput("garmin_dir", "Choose dir"), 
 
-       uiOutput("file_upload_feedback")
+       uiOutput("file_upload_feedback"), 
+
+       downloadButton("download_points", "Download"),
+
      ),
      mainPanel(
 

@@ -124,3 +124,19 @@ points_summary <- function(x) {
 
 
 }
+
+
+
+#' deviceID
+#' @param x path to where the device ID is stored
+#' @export
+#' @examples
+#' p <- system.file(package = "gpxui", "Garmin65s", "GPX", "DEVICE_ID.txt")
+deviceID <- function(p) {
+  
+  o = try(readLines(p)[1] |> as.numeric(), silent = TRUE)
+  if (inherits(o, "try-error")) o = NA
+
+  o
+
+}

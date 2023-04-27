@@ -67,7 +67,7 @@ dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = 
       tags$div(
         id = paste(inputId, "_progress", sep = ""),
         class = "progress active shiny-file-input-progress",
-        tags$div(class = "progress-bar")
+        tags$div(class = "progress-bar", id = "progress_txt")
       )
   )
 

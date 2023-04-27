@@ -104,18 +104,29 @@ function(input, output, session) {
    })
 
 
-   file_upload_output <- reactive({
-
-
-    "#TODO: function on input$garmin_dir used for feedback"
-
-   })
 
 
   output$file_upload_feedback <- renderUI({
-      file_upload_output()
+      
+    gpx_file_upload_check(input$garmin_dir)
+    
+
   }) |>
-    bindEvent(input$garmin_dir, ignoreNULL = FALSE, ignoreInit = FALSE)
+    bindEvent(input$garmin_dir, ignoreNULL = TRUE)
+
+
+  output$download_points <- downloadHandler(
+    filename = function() {
+      glue("waipoints_{Sys.Date()}.csv")
+    },
+    content = function(file) {
+      write.csv(
+        read_all_waypoints(input$garmin_dir$datapath), file,
+        row.names = FALSE
+      )
+    }
+  )
+
 
 
 
