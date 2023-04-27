@@ -25,7 +25,8 @@ fluidPage(
 
        uiOutput("file_upload_feedback"), 
 
-       downloadButton("download_points", "Download"),
+       downloadButton("download_points", "Download")
+      
 
      ),
      mainPanel(

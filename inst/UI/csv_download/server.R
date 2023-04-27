@@ -115,17 +115,22 @@ function(input, output, session) {
     bindEvent(input$garmin_dir, ignoreNULL = TRUE)
 
 
-  output$download_points <- downloadHandler(
-    filename = function() {
-      glue("waipoints_{Sys.Date()}.csv")
-    },
-    content = function(file) {
-      write.csv(
-        read_all_waypoints(input$garmin_dir$datapath), file,
-        row.names = FALSE
-      )
-    }
-  )
+  # DOWNLOAD CSV
+    output$download_points <- downloadHandler(
+      filename = function() {
+        glue("waipoints_{Sys.Date()}.csv")
+      },
+      content = function(file) {
+        write.csv(
+          read_all_waypoints(input$garmin_dir$datapath), file,
+          row.names = FALSE
+        )
+      }
+    )
+
+
+
+
 
 
 
