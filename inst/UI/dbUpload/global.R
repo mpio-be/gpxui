@@ -17,3 +17,5 @@
 
 options(shiny.autoreload = TRUE)
 options(shiny.maxRequestSize = 10 * 1024*2)
+
+
