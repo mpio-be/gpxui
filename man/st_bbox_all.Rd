@@ -8,7 +8,7 @@ st_bbox on a list}
 st_bbox_all(x)
 }
 \arguments{
-\item{x}{a list of sf objects, any non-sf objects in the list are silently ignored.}
+\item{x}{a list of sf objects, any non-sf objects or z in the list are silently ignored.}
 }
 \value{
 a st_bbox object or NULL when it fails.
@@ -24,4 +24,5 @@ trk = read_all_tracks(ff, sf = TRUE)
 st_bbox_all(list(pts, trk))
 st_bbox_all(list(pts, NULL))
 st_bbox_all(list(1, NULL))
+st_bbox_all(list(NULL, NULL))
 }

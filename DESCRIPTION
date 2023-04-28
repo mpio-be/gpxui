@@ -16,12 +16,10 @@ Imports:
     sf
 Suggests:
     leaflet,
-    leaflet.extras,    
     shinyWidgets,
     gridlayout,
     bslib,
-    knitr,
-    kableExtra
+    knitr
 Remotes:
     rstudio/gridlayout
 License: GPL (>= 2)
