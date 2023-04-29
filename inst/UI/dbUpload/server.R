@@ -1,5 +1,6 @@
 
-function(input, output, session) {
+
+function(input, output, session, export = "database") {
 observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
 #* Uplod feedback
@@ -15,6 +16,7 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
     pts <- read_all_waypoints(input$garmin_dir$datapath, sf = TRUE)
     trk <- read_all_tracks(input$garmin_dir$datapath, sf = TRUE)
 
+    }
 
     list(gpsid = gpsid, pts = pts, trk = trk)
   })
@@ -129,7 +131,7 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
   if (export == "csv") {
     output$download_points <- downloadHandler(
       filename = function() {
-        glue("waipoints_{Sys.Date()}.csv")
+        glue("waypoints_{Sys.Date()}.csv")
       },
       content = function(file) {
         write.csv(
@@ -138,6 +140,17 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
         )
       }
     )
+  
+  if(export == "database"){
+
+
+
+  }
+  
+  
+  
+  
+  
   }
 
 }

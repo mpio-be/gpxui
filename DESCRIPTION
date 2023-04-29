@@ -13,7 +13,8 @@ Imports:
     methods,
     glue,
     stringr,
-    sf
+    sf,
+    dbo
 Suggests:
     leaflet,
     shinyWidgets,
@@ -21,7 +22,8 @@ Suggests:
     bslib,
     knitr
 Remotes:
-    rstudio/gridlayout
+    rstudio/gridlayout,
+    mpio-be/dbo
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

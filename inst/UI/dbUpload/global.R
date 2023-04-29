@@ -17,5 +17,7 @@
 
 options(shiny.autoreload = TRUE)
 options(shiny.maxRequestSize = 10 * 1024*2)
+options(dbo.tz = "Europe/Berlin")
 
-
+server = "localhost"
+db = "tests"

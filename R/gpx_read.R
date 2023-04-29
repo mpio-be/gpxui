@@ -44,6 +44,7 @@ read_all_waypoints <- function(ff,int_names_only = TRUE, sf = FALSE) {
    if (length(ff) > 0) {
      o = lapply(ff, read_waypoints) |>
        rbindlist()
+
      if (int_names_only) {
        o[, gps_point := as.integer(gps_point)]
        o = o[!is.na(gps_point)]
@@ -64,6 +65,7 @@ read_all_waypoints <- function(ff,int_names_only = TRUE, sf = FALSE) {
 #' read_all_tracks
 #' @param  ff  a vector of file names
 #' @param sf output as a sf dataframe.
+
 #' @export
 #' @examples 
 #' ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)

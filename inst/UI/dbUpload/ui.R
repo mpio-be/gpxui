@@ -1,5 +1,5 @@
-export = "database"
 export = "csv"
+export = "database"
 
 grid_page(
   tags$head(
@@ -45,23 +45,29 @@ grid_page(
     uiOutput("file_upload_feedback")
   ),
   # EXPORT
-  grid_card(area = "export", {
+  grid_card(area = "export",  {
 
     if(export == "csv") {
-      s = paste(
+      s = div(
         card_header("Export waypoints"),
         downloadButton("download_points", "CSV export")
-      ) |> HTML()
+      )
+
     }
 
     if(export == "database") {
 
-      s = "TODO: db update feedback"
+      s = div("TODO: db update feedback")
     }
 
     s
 
     }
+
+ 
+
+
+
 
   )
   
