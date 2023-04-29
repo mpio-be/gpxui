@@ -1,7 +1,7 @@
-#' ui_csvExport
+#' gpxui
 #' @param  ... aguments passed to [bslib::bs_theme()]
 #' @export
-ui_csvExport <- function(...) {
+gpxui <- function(...) {
 grid_page(
   tags$head(
     tags$style(
@@ -53,8 +53,11 @@ grid_page(
   # to csv
   grid_card(
     area = "export",
+  
     card_header("Export waypoints"),
     downloadButton("download_points", "CSV export")
+  
+  
   ),
   grid_card(
     area = "map",

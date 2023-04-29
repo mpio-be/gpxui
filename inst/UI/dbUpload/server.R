@@ -1,7 +1,26 @@
-function(input, output, session) {
-  
-  observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
+function(input, output, session) {
+observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
+
+#* Uplod feedback
+  output$file_upload_feedback <- renderUI({
+    gpx_file_upload_check(input$garmin_dir)
+  }) |>
+    bindEvent(input$garmin_dir, ignoreNULL = TRUE)
+
+
+#* Read gpx
+  df <- reactive({
+    gpsid <- deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
+    pts <- read_all_waypoints(input$garmin_dir$datapath, sf = TRUE)
+    trk <- read_all_tracks(input$garmin_dir$datapath, sf = TRUE)
+
+
+    list(gpsid = gpsid, pts = pts, trk = trk)
+  })
+
+
+#* MAP
   output$MAP <- renderLeaflet({
     leaflet(options = leafletOptions(zoomControl = TRUE)) |>
       addTiles(group = "OSM") |>
@@ -17,14 +36,7 @@ function(input, output, session) {
       setView(sample(-150:150, 1), sample(-60:60, 1), zoom = 2)
   })
 
-  df <- reactive({
-    gpsid <- deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
-    pts <- read_all_waypoints(input$garmin_dir$datapath, sf = TRUE)
-    trk <- read_all_tracks(input$garmin_dir$datapath, sf = TRUE)
 
-
-    list(gpsid = gpsid, pts = pts, trk = trk)
-  })
 
   observe({
     req(input$garmin_dir)
@@ -73,9 +85,10 @@ function(input, output, session) {
     map
   })
 
+#* Summary output
+
   output$track_summary <- renderUI({
     req(input$garmin_dir)
-
 
     trk_tab <-
       df()$trk |>
@@ -112,23 +125,19 @@ function(input, output, session) {
 
 
 
+#* EXPORT
+  if (export == "csv") {
+    output$download_points <- downloadHandler(
+      filename = function() {
+        glue("waipoints_{Sys.Date()}.csv")
+      },
+      content = function(file) {
+        write.csv(
+          read_all_waypoints(input$garmin_dir$datapath), file,
+          row.names = FALSE
+        )
+      }
+    )
+  }
 
-  output$file_upload_feedback <- renderUI({
-    gpx_file_upload_check(input$garmin_dir)
-  }) |>
-    bindEvent(input$garmin_dir, ignoreNULL = TRUE)
-
-
-  # DOWNLOAD CSV
-  output$download_points <- downloadHandler(
-    filename = function() {
-      glue("waipoints_{Sys.Date()}.csv")
-    },
-    content = function(file) {
-      write.csv(
-        read_all_waypoints(input$garmin_dir$datapath), file,
-        row.names = FALSE
-      )
-    }
-  )
 }
