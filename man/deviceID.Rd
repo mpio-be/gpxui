@@ -14,4 +14,5 @@ deviceID
 }
 \examples{
 p <- system.file(package = "gpxui", "Garmin65s", "GPX", "DEVICE_ID.txt")
+deviceID(p)
 }

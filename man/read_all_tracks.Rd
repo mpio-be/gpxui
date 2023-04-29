@@ -4,18 +4,17 @@
 \alias{read_all_tracks}
 \title{read_all_tracks}
 \usage{
-read_all_tracks(ff, sf = FALSE)
+read_all_tracks(ff, gpsid)
 }
 \arguments{
 \item{ff}{a vector of file names}
 
-\item{sf}{output as a sf dataframe.}
+\item{gpsid}{the id of the gps.}
 }
 \description{
 read_all_tracks
 }
 \examples{
 ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_tracks(ff)
-read_all_tracks(ff, sf = TRUE)
+read_all_tracks(ff, gpsid = 1)
 }

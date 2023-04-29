@@ -74,7 +74,7 @@ grid_page(
   ,
   grid_card(
     area = "map",
-    card_body(
+    card_body_fill(
       leafletOutput(outputId = "MAP")
     )
   ),

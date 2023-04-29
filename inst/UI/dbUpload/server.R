@@ -13,9 +13,18 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
 #* Read gpx
   df <- reactive({
     gpsid <- deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
-    pts <- read_all_waypoints(input$garmin_dir$datapath, sf = TRUE)
-    trk <- read_all_tracks(input$garmin_dir$datapath, sf = TRUE)
+    #TODO add toastr error when gpsid is not known
+    pts <- read_all_waypoints(input$garmin_dir$datapath, gpsid = gpsid)
+    trk <- read_all_tracks(input$garmin_dir$datapath,    gpsid = gpsid)
 
+    xx <<- pts
+    zz <<- trk
+
+    if(export == "database") {
+      con = dbcon(server = SERVER, db = DB)
+      pts = keep_new(con, pts, tab = "GPS_POINTS")
+      trk = keep_new(con, trk, tab = "GPS_TRACKS")
+      DBI::dbDisconnect(con)
     }
 
     list(gpsid = gpsid, pts = pts, trk = trk)
@@ -43,9 +52,8 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
   observe({
     req(input$garmin_dir)
 
-    pts <- df()$pts
-    trk <- df()$trk
-
+    pts  <- df()$pts |> st_as_sf(coords = c("lon", "lat"), crs = 4326)
+    trk  <- df()$trk |> dt2lines("seg_id")
     bbox <- st_bbox_all(list(pts, trk)) |> as.numeric()
 
     map <- leafletProxy("MAP") |>
@@ -134,23 +142,39 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
         glue("waypoints_{Sys.Date()}.csv")
       },
       content = function(file) {
-        write.csv(
-          read_all_waypoints(input$garmin_dir$datapath), file,
-          row.names = FALSE
-        )
+        write.csv(df()$pts, file,row.names = FALSE)
       }
     )
+  }  
   
-  if(export == "database"){
+
+    observe({
+      req(input$garmin_dir)
+
+      if(export == "database"){
+        con = dbcon(server = SERVER, db = DB)
+
+        gpsid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
+        
+        pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gpsid)
+        pts = keep_new(con, pts, "GPS_POINTS")
+        
+        trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gpsid)
+        trk = keep_new(con, trk, "GPS_TRACKS")
+        
+        pts_dbupdate = DBI::dbAppendTable(con, "GPS_POINTS", pts)
+        
+        trk_dbupdate = DBI::dbAppendTable(con, "GPS_TRACKS", trk)
+
+        DBI::dbDisconnect(con)
+
+        print(pts_dbupdate)
+        print(trk_dbupdate)
 
 
+        }
+      
+    })
 
-  }
-  
-  
-  
-  
-  
-  }
 
 }

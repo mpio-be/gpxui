@@ -8,13 +8,13 @@ Description: Read and display waypoints and tracks from GPX files in a given dir
 Depends:
     R (>= 3.0.0),
     shiny,
-    data.table
+    data.table,
+    dbo
 Imports:
     methods,
     glue,
     stringr,
-    sf,
-    dbo
+    sf
 Suggests:
     leaflet,
     shinyWidgets,

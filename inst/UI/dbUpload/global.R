@@ -11,7 +11,8 @@
     "leaflet",
     "shinyWidgets",
     "gridlayout",
-    "bslib"
+    "bslib", 
+    "dbo"
   ), require, character.only = TRUE, quietly = TRUE)
   tags <- shiny::tags
 
@@ -19,5 +20,5 @@ options(shiny.autoreload = TRUE)
 options(shiny.maxRequestSize = 10 * 1024*2)
 options(dbo.tz = "Europe/Berlin")
 
-server = "localhost"
-db = "tests"
+SERVER = "localhost"
+DB = "tests"

@@ -4,20 +4,19 @@
 \alias{read_all_waypoints}
 \title{read_all_waypoints}
 \usage{
-read_all_waypoints(ff, int_names_only = TRUE, sf = FALSE)
+read_all_waypoints(ff, int_names_only = TRUE, gpsid)
 }
 \arguments{
 \item{ff}{a vector of file names}
 
 \item{int_names_only}{keep only numeric names}
 
-\item{sf}{output as a sf dataframe.}
+\item{gpsid}{the id of the gps.}
 }
 \description{
 read_all_waypoints
 }
 \examples{
 ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_waypoints(ff)
-read_all_waypoints(ff, sf = TRUE)
+read_all_waypoints(ff, gpsid = 1)
 }

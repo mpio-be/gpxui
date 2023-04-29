@@ -17,20 +17,12 @@ dt2lines <- function(x, grp, CRS = 4326) {
     st_cast("MULTILINESTRING")
 }
 
-
 #' st_bbox_all
 #' st_bbox on a list
-#' @param  x  a list of sf objects, any non-sf objects or z in the list are silently ignored.
+#' @param  x  a list of sf objects, any non-sf objects in the list are silently ignored.
 #' @return  a st_bbox object or NULL when it fails. 
 #' @export
-#' @examples
-#' ff <- list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-#' pts = read_all_waypoints(ff, sf = TRUE)
-#' trk = read_all_tracks(ff, sf = TRUE)
-#' st_bbox_all(list(pts, trk))
-#' st_bbox_all(list(pts, NULL))
-#' st_bbox_all(list(1, NULL))
-#' st_bbox_all(list(NULL, NULL))
+
 st_bbox_all = function(x) {
 
   if(!is.null(unique(x)[[1]])) {
@@ -56,15 +48,20 @@ st_bbox_all = function(x) {
 
 }
 
-
+#' track_summary
 #' @export
+#' @examples 
+#' ff <- list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
+#' read_all_tracks(ff, gpsid = 1) |> track_summary()
 track_summary <- function(x) {
 
   if (is.null(x)) o = data.frame(Info = "No GPX track files found")
   
   if(!is.null(x)) {
-    o = sf::st_drop_geometry(x) |> setDT()
-    o[, dist := sf::st_length(x) |> units::set_units("km")]
+    xs = dt2lines(x, "seg_id")
+
+    o = sf::st_drop_geometry(xs) |> setDT()
+    o[, dist := sf::st_length(xs) |> units::set_units("km")]
     o[, deltat := difftime(max_dt, min_dt, units = "hours")]
 
     o = o[, .(
@@ -91,14 +88,19 @@ track_summary <- function(x) {
 
 }
 
+#' points_summary
 #' @export
+#' @examples
+#' ff <- list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
+#' read_all_waypoints(ff, gpsid = 1) |> points_summary()
 points_summary <- function(x) {
 
   if (is.null(x)) o = data.frame(Info = "No GPX waypoints files found")
   
   if (!is.null(x)) {
     h =
-      sf::st_union(x) |>
+      sf:: st_as_sf(x, coords = c("lon", "lat"), crs = 4326) |>
+      sf::st_union() |>
       sf::st_convex_hull() |>
       sf::st_area() |>
       units::set_units("km^2")
@@ -125,13 +127,12 @@ points_summary <- function(x) {
 
 }
 
-
-
 #' deviceID
 #' @param x path to where the device ID is stored
 #' @export
 #' @examples
 #' p <- system.file(package = "gpxui", "Garmin65s", "GPX", "DEVICE_ID.txt")
+#' deviceID(p)
 deviceID <- function(p) {
   
   o = try(readLines(p)[1] |> as.numeric(), silent = TRUE)
