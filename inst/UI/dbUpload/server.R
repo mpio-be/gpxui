@@ -154,12 +154,12 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
       if(export == "database"){
         con = dbcon(server = SERVER, db = DB)
 
-        gpsid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
+        gid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
         
-        pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gpsid)
+        pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gid)
         pts = keep_new(con, pts, "GPS_POINTS")
         
-        trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gpsid)
+        trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gid)
         trk = keep_new(con, trk, "GPS_TRACKS")
         
         pts_dbupdate = DBI::dbAppendTable(con, "GPS_POINTS", pts)

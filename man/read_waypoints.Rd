@@ -10,6 +10,6 @@ read_waypoints(x)
 read_waypoints
 }
 \examples{
-f = system.file(package = "gpxui", "Garmin65s","Garmin", "GPX", "Waypoints_20-APR-23.gpx")
+f = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
 read_waypoints(f)
 }

@@ -10,6 +10,6 @@ read_tracks(x)
 read_tracks
 }
 \examples{
-f = system.file(package = "gpxui", "Garmin65s","Garmin", "GPX", "Current", "Current.gpx")
+f = system.file(package = "gpxui", "Garmin65s", "GPX", "Current", "Current.gpx")
 read_tracks(f)
 }

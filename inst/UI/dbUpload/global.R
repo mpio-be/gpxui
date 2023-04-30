@@ -12,6 +12,7 @@
     "shinyWidgets",
     "gridlayout",
     "bslib", 
+    "sf",
     "dbo"
   ), require, character.only = TRUE, quietly = TRUE)
   tags <- shiny::tags

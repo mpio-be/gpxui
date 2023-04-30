@@ -17,16 +17,16 @@ grid_page(
     version = 5, bg = "#06262e", fg = "#e7debd",
   ),
   layout = c(
-    "import map",
-    "export feedback"
+    "controls   map",
+    "feedback   summary"
   ),
   col_sizes = c("1fr", "2fr"),
   row_sizes = c("3fr", "2fr"),
   gap_size = "1px",
 
-  # Import
+  #* Import/Export
   grid_card(
-    area = "import",
+    area = "controls",
     card_header("GPS manager"),
     withTags(
       ol(
@@ -42,11 +42,7 @@ grid_page(
     ) |> HTML() |> p(),
     hr(),
     dirInput("garmin_dir"),
-    uiOutput("file_upload_feedback")
-  ),
-  # EXPORT
-  grid_card(area = "export",  {
-
+      
     if(export == "csv") {
       s = div(
         card_header("Export waypoints"),
@@ -54,6 +50,12 @@ grid_page(
       )
 
     }
+  
+  ),
+  #* EXPORT
+  grid_card(area = "feedback",  {
+
+    uiOutput("file_upload_feedback"), 
 
     if(export == "database") {
 

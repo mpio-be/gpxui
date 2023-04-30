@@ -5,12 +5,12 @@
 \title{keep_new
 keep new entries relative to database state}
 \usage{
-keep_new(x, con, tab)
+keep_new(con, x, tab)
 }
 \arguments{
-\item{x}{a data.table; output of read_all_waypoints() or read_all_tracks().}
-
 \item{con}{a connection to db}
+
+\item{x}{a data.table; output of read_all_waypoints() or read_all_tracks().}
 
 \item{tab}{database table to crosscheck against}
 }
@@ -22,13 +22,10 @@ keep new entries relative to database state
 ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
 x = read_all_waypoints(ff, gpsid = 1)
 con = dbcon(server = "localhost", db = "tests")
-keep_new(x, con, tab = "GPS_POINTS")
-
-x = read_all_tracks(ff, sf = TRUE, gpsid = 1)
-keep_new(x, con, tab = "GPS_TRACKS")
+keep_new(con, x, tab = "GPS_POINTS")
 
 x = read_all_tracks(ff, gpsid = 1)
-keep_new(x, con, tab = "GPS_TRACKS")
+keep_new(con, x, tab = "GPS_TRACKS")
 
 DBI::dbDisconnect(con)
 
