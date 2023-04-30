@@ -26,3 +26,5 @@ DT2gpx <- function(x, longit = "lon", latit = "lat", nam, symbol = "Bird", dest 
 
   file.exists(dest)
 }
+
+# TODO: export function w. filetype = c("csv", "gpx")

@@ -81,7 +81,7 @@ gpx_file_upload_check <- function(x) {
   ngpx = nrow(d[str_detect(name, "\\.gpx$")])
 
   if (ngpx == 0) 
-  o2 = glue("Files uploaded OK but the selected folder contains no {tags$code('gpx')} files. Did you upload the correct folder?") |> HTML() else 
+  o2 = glue("Files uploaded OK but the selected folder contains no {tags$code('gpx')} files. Did you select the correct folder?") |> HTML() else 
   o2 = glue("{ngpx} files uploaded.") 
   
 

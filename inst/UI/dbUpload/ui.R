@@ -17,71 +17,54 @@ grid_page(
     version = 5, bg = "#06262e", fg = "#e7debd",
   ),
   layout = c(
-    "controls   map",
-    "feedback   summary"
+    "upload    map summary",
+    "download  map summary",
+    "feedback  map summary"
   ),
-  col_sizes = c("1fr", "2fr"),
-  row_sizes = c("3fr", "2fr"),
+  col_sizes = c("1fr", "3fr", "0.5fr"),
+  row_sizes = c("1fr", "2fr", "2fr"),
   gap_size = "1px",
 
-  #* Import/Export
-  grid_card(
-    area = "controls",
-    card_header("GPS manager"),
-    withTags(
-      ol(
-        li("Plug-in your GPS and wait until it is recognised by your PC.") |> h6(),
-        li("Press", u("GPS upload"), ",select", kbd("./GARMIN/Garmin/GPX"), "and", u("Upload")) |> h6()
-      )
-    ),
-    paste(
-      icon("circle-info"),
-      "If you get",
-      tags$q("Maximum upload size exceeded"),
-      "you probably selected the wrong folder."
-    ) |> HTML() |> p(),
-    hr(),
-    dirInput("garmin_dir"),
-      
-    if(export == "csv") {
-      s = div(
-        card_header("Export waypoints"),
-        downloadButton("download_points", "CSV export")
-      )
+  #* Upload
+  grid_card(area = "upload",
+    
+    card_header("Garmin GPS manager" |> h3()),
+    div("open md help"), 
+    dirInput("garmin_dir")
 
-    }
-  
   ),
-  #* EXPORT
+
+#* Download
+  grid_card(area = "download",
+  
+    downloadButton("download_points", "Export")
+
+  ),
+
+
+#* Feedback: upload and save
   grid_card(area = "feedback",  {
 
-    uiOutput("file_upload_feedback"), 
-
-    if(export == "database") {
-
-      s = div("TODO: db update feedback")
-    }
-
-    s
-
-    }
-
- 
+    uiOutput("file_upload_feedback")
 
 
+    })
+   ,
 
-
-  )
-  
-  ,
-  grid_card(
-    area = "map",
+#* Map
+  grid_card(area = "map",
     card_body_fill(
       leafletOutput(outputId = "MAP")
     )
-  ),
-  grid_card(
-    area = "feedback",
+  )
+  ,
+
+#* Feedback: track and points
+   grid_card(area = "summary",
     uiOutput("track_summary")
   )
+
+
+
+
 )

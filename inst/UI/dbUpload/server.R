@@ -3,29 +3,25 @@
 function(input, output, session, export = "database") {
 observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
-#* Uplod feedback
+#* Feedback on dir upload
   output$file_upload_feedback <- renderUI({
     gpx_file_upload_check(input$garmin_dir)
   }) |>
     bindEvent(input$garmin_dir, ignoreNULL = TRUE)
 
 
-#* Read gpx
+#* Read all new gpx
   df <- reactive({
     gpsid <- deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
     #TODO add toastr error when gpsid is not known
     pts <- read_all_waypoints(input$garmin_dir$datapath, gpsid = gpsid)
     trk <- read_all_tracks(input$garmin_dir$datapath,    gpsid = gpsid)
 
-    xx <<- pts
-    zz <<- trk
-
-    if(export == "database") {
-      con = dbcon(server = SERVER, db = DB)
-      pts = keep_new(con, pts, tab = "GPS_POINTS")
-      trk = keep_new(con, trk, tab = "GPS_TRACKS")
-      DBI::dbDisconnect(con)
-    }
+    con = dbcon(server = SERVER, db = DB)
+    pts = keep_new(con, pts, tab = "GPS_POINTS")
+    trk = keep_new(con, trk, tab = "GPS_TRACKS")
+    DBI::dbDisconnect(con)
+  
 
     list(gpsid = gpsid, pts = pts, trk = trk)
   })
@@ -95,7 +91,7 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
     map
   })
 
-#* Summary output
+#* Feedback on points and tracks
 
   output$track_summary <- renderUI({
     req(input$garmin_dir)
@@ -123,56 +119,64 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
       HTML()
 
 
-    card_body(
-      min_height = 200,
-      layout_column_wrap(
-        width = 1 / 2,
-        trk_tab,
-        trk_pts
-      )
+    # card_body(
+    #   min_height = 200,
+    #   layout_column_wrap(
+    #     width = 1/2,
+    #     trk_tab,
+    #     trk_pts
+    #   )
+    # )
+
+    div(
+      trk_tab,
+      trk_pts
     )
+
+
   })
 
 
 
 #* EXPORT
-  if (export == "csv") {
-    output$download_points <- downloadHandler(
-      filename = function() {
-        glue("waypoints_{Sys.Date()}.csv")
-      },
-      content = function(file) {
-        write.csv(df()$pts, file,row.names = FALSE)
-      }
-    )
-  }  
+  # if (export == "csv") {
+  #   output$download_points <- downloadHandler(
+  #     filename = function() {
+  #       glue("waypoints_{Sys.Date()}.csv")
+  #     },
+  #     content = function(file) {
+  #       write.csv(df()$pts, file,row.names = FALSE)
+  #     }
+  #   )
+  # }  
   
 
     observe({
       req(input$garmin_dir)
 
-      if(export == "database"){
-        con = dbcon(server = SERVER, db = DB)
 
-        gid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
+      con = dbcon(server = SERVER, db = DB)
+
+      gid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
+      
+      pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gid)
+      pts = keep_new(con, pts, "GPS_POINTS")
+      
+      trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gid)
+      trk = keep_new(con, trk, "GPS_TRACKS")
+      
+      pts_dbupdate = DBI::dbAppendTable(con, "GPS_POINTS", pts)
+      
+      trk_dbupdate = DBI::dbAppendTable(con, "GPS_TRACKS", trk)
+
+      DBI::dbDisconnect(con)
+
+      # TODO writedb update
+      print(pts_dbupdate)
+      print(trk_dbupdate)
+
+
         
-        pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gid)
-        pts = keep_new(con, pts, "GPS_POINTS")
-        
-        trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gid)
-        trk = keep_new(con, trk, "GPS_TRACKS")
-        
-        pts_dbupdate = DBI::dbAppendTable(con, "GPS_POINTS", pts)
-        
-        trk_dbupdate = DBI::dbAppendTable(con, "GPS_TRACKS", trk)
-
-        DBI::dbDisconnect(con)
-
-        print(pts_dbupdate)
-        print(trk_dbupdate)
-
-
-        }
       
     })
 
