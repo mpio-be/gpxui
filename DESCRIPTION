@@ -17,7 +17,6 @@ Imports:
     sf
 Suggests:
     leaflet,
-    shinyWidgets,
     gridlayout,
     bslib,
     knitr

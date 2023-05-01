@@ -28,92 +28,93 @@ read_tracks <- function(x) {
   cbind(d, xy)
 }
 
+
+#' deviceID
+#' @param x a data.frame  uploaded to the server by dirInput
+#' @export
+#' @examples
+#' x <- system.file(package = "gpxui", "Garmin65s", "GPX") |> as_dirInput_output()
+#' deviceID(x)
+deviceID <- function(x) {
+
+  path_to_id = subset(x, name == "DEVICE_ID.txt")$datapath
+
+  o = try(
+    readLines(path_to_id)[1] |> 
+      as.numeric(),
+    silent = TRUE
+  )
+
+
+  if (inherits(o, "try-error")) o <- NA
+
+  o
+}
+
+
 #' read_all_waypoints
-#' @param  ff  a vector of file names
+#' @description  read all waypoints from the GPX directory and the gps id from DEVICE_ID.txt when it exists
+#' @param  ff  a data.frame  uploaded to the server by dirInput
 #' @param int_names_only keep only numeric names
-#' @param gpsid the id of the gps. 
 #' @export
 #' @examples 
-#' ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-#' read_all_waypoints(ff, gpsid = 1)
-read_all_waypoints <- function(ff,int_names_only = TRUE, gpsid) {
+#' system.file(package = "gpxui", "Garmin65s") |> 
+#' as_dirInput_output() |>
+#' read_all_waypoints()
+read_all_waypoints <- function(ff,int_names_only = TRUE) {
+
+  gid = deviceID(ff)
+
+  ff = ff$datapath
 
   ff = ff[basename(ff) |> str_detect("gpx$")]
 
-   if (length(ff) > 0) {
-     o = lapply(ff, read_waypoints) |>
-       rbindlist()
-     o[, gps_id := gpsid]
+  if (length(ff) > 0) {
+    o = lapply(ff, read_waypoints) |>
+      rbindlist()
+    o[, gps_id := gid]
 
-     if (int_names_only) {
-       o[, gps_point := as.integer(gps_point)]
-       o = o[!is.na(gps_point)]
-     }
+    if (int_names_only) {
+      o[, gps_point := as.integer(gps_point)]
+      o = o[!is.na(gps_point)]
+    }
 
-   } else {
-     o = NULL
+    setcolorder(o, "gps_id")
+
+  } else {
+    o = NULL
   }
-
 
   o
 
 }
 
 #' read_all_tracks
-#' @param  ff  a vector of file names
-#' @param gpsid the id of the gps.
-#' 
+#' @description  read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
+#' @param  ff  a data.frame  uploaded to the server by dirInput
 #' @export
 #' @examples
-#' ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-#' read_all_tracks(ff, gpsid = 1)
-read_all_tracks <- function(ff, gpsid) {
+#' system.file(package = "gpxui", "Garmin65s") |>
+#' as_dirInput_output() |>
+#' read_all_tracks()
+read_all_tracks <- function(ff) {
+
+  gid = deviceID(ff)
+  ff = ff$datapath
 
   ff = ff[basename(ff) |> str_detect("gpx$")]
 
-   if (length(ff) > 0) {
-    o = lapply(ff, read_tracks) |>
-      rbindlist()
-    o[, gps_id := gpsid]
+  if (length(ff) > 0) {
+  o = lapply(ff, read_tracks) |>
+    rbindlist()
+  o[, gps_id := gid]
 
+  setcolorder(o, "gps_id")
 
-     } else  {
-        o = NULL
-    }
-
-   o
-
-}
-
-
-#' keep_new
-#' keep new entries relative to database state
-#' @param con a connection to db
-#' @param x a data.table; output of read_all_waypoints() or read_all_tracks().
-#' @param tab database table to crosscheck against
-#' @export
-#' @examples
-#' ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-#' x = read_all_waypoints(ff, gpsid = 1)
-#' con = dbcon(server = "localhost", db = "tests")
-#' keep_new(con, x, tab = "GPS_POINTS")
-#'
-#' x = read_all_tracks(ff, gpsid = 1)
-#' keep_new(con, x, tab = "GPS_TRACKS")
-#' 
-#' DBI::dbDisconnect(con)
-#'
-keep_new <- function(con, x, tab) {
-  
-  lastdt <- dbq(
-    con,
-    glue("SELECT max(datetime_) dt from {tab}
-      WHERE gps_id = {x$gps_id[1]}")
-  )$dt
-
-  if (!is.na(lastdt)) {
-    o <- x[datetime_ > lastdt]
-  } else o = x
+    } else  {
+      o = NULL
+  }
 
   o
+
 }

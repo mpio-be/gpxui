@@ -1,2 +1,0 @@
-
-gpxserver(export = "csv")

@@ -4,17 +4,16 @@
 \alias{read_all_tracks}
 \title{read_all_tracks}
 \usage{
-read_all_tracks(ff, gpsid)
+read_all_tracks(ff)
 }
 \arguments{
-\item{ff}{a vector of file names}
-
-\item{gpsid}{the id of the gps.}
+\item{ff}{a data.frame  uploaded to the server by dirInput}
 }
 \description{
-read_all_tracks
+read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
 }
 \examples{
-ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_tracks(ff, gpsid = 1)
+system.file(package = "gpxui", "Garmin65s") |>
+as_dirInput_output() |>
+read_all_tracks()
 }

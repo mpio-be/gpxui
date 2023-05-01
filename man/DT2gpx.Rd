@@ -17,8 +17,8 @@ DT2gpx(
 DT2gpx
 }
 \examples{
-x = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE) |>
-  read_all_waypoints(gpsid = 1)
+x = system.file(package = "gpxui", "Garmin65s") |> as_dirInput_output() |>
+  read_all_waypoints()
 outf = tempfile(fileext = ".gpx")
 DT2gpx(x, nam = "gps_point", dest = outf)
 }

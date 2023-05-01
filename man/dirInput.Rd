@@ -9,7 +9,7 @@ dirInput(
   label = NULL,
   width = "100\%",
   buttonLabel = "GPS upload",
-  placeholder = "./GARMIN/Garmin/gpx"
+  placeholder = "./GARMIN/Garmin/GPX"
 )
 }
 \description{

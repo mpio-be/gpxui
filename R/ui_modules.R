@@ -25,7 +25,7 @@
 
 #' shinyApp(ui, server)
 
-dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/gpx") {
+dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
   inputTag <- tags$input(
     id              = inputId,
     name            = inputId,
@@ -68,11 +68,12 @@ dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS u
 #' @export 
 #' @param  x a data.frame returned by UI after dir upload
 #' 
-gpx_file_upload_check <- function(x) {
+gpx_file_upload_check <- function(x) { 
+
+  did = deviceID(x)
 
   d = data.table(x)
 
-  did = deviceID(d[name == "DEVICE_ID.txt", datapath])
 
   if (is.na(did)) 
     o1 = "GPS ID not found!" else 
@@ -82,14 +83,14 @@ gpx_file_upload_check <- function(x) {
 
   if (ngpx == 0) 
   o2 = glue("Files uploaded OK but the selected folder contains no {tags$code('gpx')} files. Did you select the correct folder?") |> HTML() else 
-  o2 = glue("{ngpx} files uploaded.") 
+  o2 = glue("Found {ngpx} files.") 
   
 
-   tagList(
-     o1 |>tags$li() |>h5() , 
-     o2 |>tags$li() |>h5() 
-     )
-  
+  tagList(
+    o1 |>tags$li() |>h5() , 
+    o2 |>tags$li() |>h5() 
+    )
+
 
 
 }

@@ -2,14 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{points_summary}
 \alias{points_summary}
-\title{points_summary}
+\title{points_summary #TODO}
 \usage{
 points_summary(x)
 }
 \description{
-points_summary
+points_summary #TODO
 }
 \examples{
-ff <- list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_waypoints(ff, gpsid = 1) |> points_summary()
+x = 
+system.file(package = "gpxui", "Garmin65s") |>
+as_dirInput_output() |>
+read_all_tracks() |>
+points_summary()
 }

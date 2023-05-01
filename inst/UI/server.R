@@ -3,28 +3,51 @@
 function(input, output, session, export = "database") {
 observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
-#* Feedback on dir upload
+#* Feedback on dir upload before db upload
   output$file_upload_feedback <- renderUI({
-    gpx_file_upload_check(input$garmin_dir)
+    gpx_file_upload_check(input$upload_GPX)
   }) |>
-    bindEvent(input$garmin_dir, ignoreNULL = TRUE)
+    bindEvent(input$upload_GPX, ignoreNULL = TRUE)
 
 
-#* Read all new gpx
-  df <- reactive({
-    gpsid <- deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
-    #TODO add toastr error when gpsid is not known
-    pts <- read_all_waypoints(input$garmin_dir$datapath, gpsid = gpsid)
-    trk <- read_all_tracks(input$garmin_dir$datapath,    gpsid = gpsid)
+#+ Read gpx, update db, update UI
+  run_update = reactive({
 
+    # read gpx
+    pts <- read_all_waypoints(input$upload_GPX)
+    trk <- read_all_tracks(input$upload_GPX)
+
+    # update new data to db
     con = dbcon(server = SERVER, db = DB)
-    pts = keep_new(con, pts, tab = "GPS_POINTS")
-    trk = keep_new(con, trk, tab = "GPS_TRACKS")
+    updated_pts = gpx_to_database(con, pts, tab = "GPS_POINTS")
+    updated_trk = gpx_to_database(con, trk, tab = "GPS_TRACKS")
     DBI::dbDisconnect(con)
-  
 
-    list(gpsid = gpsid, pts = pts, trk = trk)
+    rbindlist(list(updated_pts, updated_trk))
+
+  }) 
+  
+  observeEvent(input$upload_GPX, {
+    x <<- run_update()
+
+    updateTextInput(session, "last_pts_dt", value = x[tab == "GPS_POINTS", last_entry_before_update |> as.character()] )
+    updateTextInput(session, "last_trk_dt", value = x[tab == "GPS_TRACKS", last_entry_before_update |> as.character()])
   })
+
+#+ read uploaded data to db
+  get_newly_updated = function(...) {
+    con <- dbcon(server = SERVER, db = DB)
+    on.exit(DBI::dbDisconnect(con))
+
+    pts <- read_GPX_table(con, input$last_trk_dt, tab = "GPS_POINTS",...)
+    trk <- read_GPX_table(con, input$last_trk_dt, tab = "GPS_TRACKS",...)
+    
+    list(pts = pts, trk = trk)
+
+
+  }
+
+
 
 
 #* MAP
@@ -46,10 +69,14 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
 
 
   observe({
-    req(input$garmin_dir)
+    req(input$last_trk_dt)
 
-    pts  <- df()$pts |> st_as_sf(coords = c("lon", "lat"), crs = 4326)
-    trk  <- df()$trk |> dt2lines("seg_id")
+    x = get_newly_updated(sf = TRUE)
+
+    pts <- x$pts
+    trk <- x$trk
+   
+
     bbox <- st_bbox_all(list(pts, trk)) |> as.numeric()
 
     map <- leafletProxy("MAP") |>
@@ -94,10 +121,11 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
 #* Feedback on points and tracks
 
   output$track_summary <- renderUI({
-    req(input$garmin_dir)
+    req(input$last_trk_dt)
 
-    trk_tab <-
-      df()$trk |>
+    x = get_newly_updated(sf = TRUE)
+
+    trk_tab <- x$trk |>
       track_summary() |>
       knitr::kable(
         caption = "Track",
@@ -107,8 +135,7 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
       ) |>
       HTML()
 
-    trk_pts <-
-      df()$pts |>
+    trk_pts <- x$pts |>
       points_summary() |>
       knitr::kable(
         caption = "Points",
@@ -119,14 +146,6 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
       HTML()
 
 
-    # card_body(
-    #   min_height = 200,
-    #   layout_column_wrap(
-    #     width = 1/2,
-    #     trk_tab,
-    #     trk_pts
-    #   )
-    # )
 
     div(
       trk_tab,
@@ -151,34 +170,7 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
   # }  
   
 
-    observe({
-      req(input$garmin_dir)
 
-
-      con = dbcon(server = SERVER, db = DB)
-
-      gid = deviceID(subset(input$garmin_dir, name == "DEVICE_ID.txt")$datapath)
-      
-      pts = read_all_waypoints(input$garmin_dir$datapath, gpsid = gid)
-      pts = keep_new(con, pts, "GPS_POINTS")
-      
-      trk = read_all_tracks(input$garmin_dir$datapath, gpsid = gid)
-      trk = keep_new(con, trk, "GPS_TRACKS")
-      
-      pts_dbupdate = DBI::dbAppendTable(con, "GPS_POINTS", pts)
-      
-      trk_dbupdate = DBI::dbAppendTable(con, "GPS_TRACKS", trk)
-
-      DBI::dbDisconnect(con)
-
-      # TODO writedb update
-      print(pts_dbupdate)
-      print(trk_dbupdate)
-
-
-        
-      
-    })
 
 
 }

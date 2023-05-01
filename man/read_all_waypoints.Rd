@@ -4,19 +4,18 @@
 \alias{read_all_waypoints}
 \title{read_all_waypoints}
 \usage{
-read_all_waypoints(ff, int_names_only = TRUE, gpsid)
+read_all_waypoints(ff, int_names_only = TRUE)
 }
 \arguments{
-\item{ff}{a vector of file names}
+\item{ff}{a data.frame  uploaded to the server by dirInput}
 
 \item{int_names_only}{keep only numeric names}
-
-\item{gpsid}{the id of the gps.}
 }
 \description{
-read_all_waypoints
+read all waypoints from the GPX directory and the gps id from DEVICE_ID.txt when it exists
 }
 \examples{
-ff = list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_waypoints(ff, gpsid = 1)
+system.file(package = "gpxui", "Garmin65s") |> 
+as_dirInput_output() |>
+read_all_waypoints()
 }

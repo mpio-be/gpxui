@@ -2,14 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{track_summary}
 \alias{track_summary}
-\title{track_summary}
+\title{track_summary #TODO}
 \usage{
 track_summary(x)
 }
 \description{
-track_summary
+track_summary #TODO
 }
 \examples{
-ff <- list.files(system.file(package = "gpxui", "Garmin65s"), full.names = TRUE, recursive = TRUE)
-read_all_tracks(ff, gpsid = 1) |> track_summary()
+system.file(package = "gpxui", "Garmin65s") |> 
+as_dirInput_output() |>
+read_all_tracks() |> 
+track_summary()
 }

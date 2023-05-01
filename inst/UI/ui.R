@@ -2,6 +2,8 @@ export = "csv"
 export = "database"
 
 grid_page(
+  useShinyjs(), 
+
   tags$head(
     tags$style(
       HTML(
@@ -22,15 +24,19 @@ grid_page(
     "feedback  map summary"
   ),
   col_sizes = c("1fr", "3fr", "0.5fr"),
-  row_sizes = c("1fr", "2fr", "2fr"),
-  gap_size = "1px",
+  row_sizes = c("3fr", "2fr", "2fr"),
+  gap_size = "0px",
 
   #* Upload
   grid_card(area = "upload",
     
     card_header("Garmin GPS manager" |> h3()),
     div("open md help"), 
-    dirInput("garmin_dir")
+    dirInput("upload_GPX"), 
+    
+    textInput("last_pts_dt", "Last points")|> disabled(),
+    textInput("last_trk_dt", "Last tracks")|> disabled()
+
 
   ),
 
@@ -61,6 +67,7 @@ grid_page(
 
 #* Feedback: track and points
    grid_card(area = "summary",
+    card_header("NEw data"), 
     uiOutput("track_summary")
   )
 
