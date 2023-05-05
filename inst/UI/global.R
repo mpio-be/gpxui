@@ -8,7 +8,6 @@
 #! Settings
   sapply(c(
     "gpxui",
-    "shinyjs",
     "leaflet",
     "gridlayout",
     "bslib", 
@@ -23,3 +22,16 @@ options(dbo.tz = "Europe/Berlin")
 
 SERVER = "localhost"
 DB = "tests"
+
+
+ttt = function() {
+
+  con <- dbcon(server = "localhost", db = "tests")
+  DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
+  DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
+  DBI::dbDisconnect(con)
+
+}
+
+
+ttt()

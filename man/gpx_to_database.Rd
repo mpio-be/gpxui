@@ -5,10 +5,12 @@
 \title{gpx_to_database
 saves new entries to database}
 \usage{
-gpx_to_database(con, x, tab)
+gpx_to_database(server, db, x, tab)
 }
 \arguments{
-\item{con}{a connection to db}
+\item{server}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+
+\item{db}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
 
 \item{x}{a data.table; output of read_all_waypoints() or read_all_tracks().}
 

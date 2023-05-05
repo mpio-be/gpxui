@@ -25,7 +25,7 @@
 
 #' shinyApp(ui, server)
 
-dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
+dirInput <- function(inputId, label = NULL, buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
   inputTag <- tags$input(
     id              = inputId,
     name            = inputId,
@@ -37,7 +37,7 @@ dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS u
 
   div(
     class = "form-group shiny-input-container",
-    style = htmltools::css(width = validateCssUnit(width)),
+
     shiny:::shinyInputLabel(inputId, label),
     div(
       class = "input-group",
@@ -90,6 +90,109 @@ gpx_file_upload_check <- function(x) {
     o1 |>tags$li() |>h5() , 
     o2 |>tags$li() |>h5() 
     )
+
+
+
+}
+
+
+#' track_summary
+#' @export
+track_summary <- function(x) {
+  if (is.null(x)) o <- data.frame(Info = "No GPX track files found")
+
+  if (!is.null(x)) {
+    o <- sf::st_drop_geometry(x) |> setDT()
+    o[, dist := sf::st_length(x) |> units::set_units("km")]
+    o[, deltat := difftime(max_dt, min_dt, units = "hours")]
+
+    o <- o[, .(
+      `N track points` = nrow(o) |> as.character(),
+      `mean elevation` = weighted.mean(mean_ele, w = n) |> round(2) |> as.character(),
+      `max elevation` = max(max_ele) |> round(2) |> as.character(),
+      `min elevation` = min(max_ele) |> round(2) |> as.character(),
+      `start hour` = min(min_dt) |> format("%H:%M"),
+      `stop hour` = max(max_dt) |> format("%H:%M"),
+      `avg speed (km/hour)` = weighted.mean(as.numeric(dist) / as.numeric(deltat), w = n) |>
+        round(2) |>
+        as.character()
+    )]
+
+    o[, i := 1]
+    o <- melt(o, id.vars = "i")[, i := NULL]
+
+    if (nrow(x) == 0) {
+      o <- o[1, ]
+    }
+  }
+
+  o
+}
+
+#' points_summary
+#' @export
+points_summary <- function(x) {
+  if (is.null(x)) o <- data.frame(Info = "No GPX waypoints files found")
+
+  if (!is.null(x)) {
+    h <-
+      x |>
+      sf::st_union() |>
+      sf::st_convex_hull() |>
+      sf::st_area() |>
+      units::set_units("km^2")
+
+    o <- data.table(
+      `N waypoints` = nrow(x) |> as.character(),
+      `first point` = x$gps_point[1] |> as.character(),
+      `last point` = x$gps_point[nrow(x)] |> as.character(),
+      `Area covered (km²)` = round(h, 2) |> as.character()
+    )
+
+    o[, i := 1]
+    o <- melt(o, id.vars = "i")[, i := NULL]
+
+    if (nrow(x) == 0) {
+      o <- o[1, ]
+    }
+  }
+
+
+  o
+}
+
+#' gpx_summary
+#' @export
+gpx_summary <- function(pts, trk) {
+    
+  trk_smr = if (nrow(trk) == 0) track_summary(trk) |>  suppressWarnings()  else track_summary(trk)
+  pst_smr = if (nrow(pts) == 0) points_summary(pts) |> suppressWarnings() else points_summary(pts)
+
+
+  trk_tab <-
+  knitr::kable(trk_smr, 
+    caption = "Track",
+    digits = 2,
+    table.attr = "class = 'table table-striped table-sm'",
+    format = "html"
+  ) |>
+  HTML()
+
+  trk_pts <-
+  knitr::kable(pst_smr,
+    caption = "Points",
+    digits = 2,
+    table.attr = "class = 'table table-striped table-sm'",
+    format = "html"
+  ) |>
+  HTML()
+
+
+
+  div(
+  trk_tab,
+  trk_pts
+  )
 
 
 

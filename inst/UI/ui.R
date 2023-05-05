@@ -2,19 +2,10 @@ export = "csv"
 export = "database"
 
 grid_page(
-  useShinyjs(), 
 
-  tags$head(
-    tags$style(
-      HTML(
-        ".leaflet-tooltip {
-            background-color: transparent;
-            border: none;
-          }
-          "
-      )
-    )
-  ),
+  # includeCSS('~/github/mpio-be/gpxui/inst/style.css'), 
+  includeCSS(system.file(package = "gpxui", "style.css")),
+
   theme = bs_theme(
     version = 5, bg = "#06262e", fg = "#e7debd",
   ),
@@ -27,15 +18,25 @@ grid_page(
   row_sizes = c("3fr", "2fr", "2fr"),
   gap_size = "0px",
 
-  #* Upload
+
+#* Upload
   grid_card(area = "upload",
-    
-    card_header("Garmin GPS manager" |> h3()),
-    div("open md help"), 
-    dirInput("upload_GPX"), 
-    
-    textInput("last_pts_dt", "Last points")|> disabled(),
-    textInput("last_trk_dt", "Last tracks")|> disabled()
+
+  card_header( p(icon("location"), "Garmin GPS manager") |> h4()),
+  div("open md help"), 
+  dirInput("upload_GPX"), 
+
+
+  dateInput("show_after", "Show after:"), 
+
+  # invisible input container for last datetime in db
+  div(
+    class = "invisible",
+    style = "display: none",
+    textInput("last_pts_dt", "Last points"),
+    textInput("last_trk_dt", "Last tracks")
+  )
+
 
 
   ),
@@ -53,9 +54,8 @@ grid_page(
 
     uiOutput("file_upload_feedback")
 
-
     })
-   ,
+  ,
 
 #* Map
   grid_card(area = "map",
@@ -66,10 +66,15 @@ grid_page(
   ,
 
 #* Feedback: track and points
-   grid_card(area = "summary",
-    card_header("NEw data"), 
+  grid_card(area = "summary",
+    card_header( icon("comment") ), 
+    
+   
     uiOutput("track_summary")
-  )
+    
+    
+    
+    )
 
 
 

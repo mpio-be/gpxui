@@ -7,7 +7,6 @@
 dirInput(
   inputId,
   label = NULL,
-  width = "100\%",
   buttonLabel = "GPS upload",
   placeholder = "./GARMIN/Garmin/GPX"
 )

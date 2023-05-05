@@ -5,10 +5,12 @@
 \title{read_GPX_table
 Fetch database tables}
 \usage{
-read_GPX_table(con, tab, dt = "1900-01-01", sf = FALSE)
+read_GPX_table(server, db, tab, dt = "1900-01-01", sf = FALSE)
 }
 \arguments{
-\item{con}{a connection to db}
+\item{server}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+
+\item{db}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
 
 \item{tab}{database table   (GPS_TRACKS, GPS_POINTS)}
 
