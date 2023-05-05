@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{points_summary}
 \alias{points_summary}
-\title{points_summary #TODO}
+\title{points_summary}
 \usage{
 points_summary(x)
 }
 \description{
-points_summary #TODO
+points_summary
 }
 \examples{
 x = 

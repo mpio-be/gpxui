@@ -12,7 +12,7 @@ gpx_to_database(con, x, tab)
 
 \item{x}{a data.table; output of read_all_waypoints() or read_all_tracks().}
 
-\item{tab}{database table}
+\item{tab}{database table (GPS_TRACKS, GPS_POINTS)}
 }
 \value{
 a data.frame containing last entry in db prior to database update and the number of updated entries.
@@ -20,18 +20,4 @@ a data.frame containing last entry in db prior to database update and the number
 \description{
 gpx_to_database
 saves new entries to database
-}
-\examples{
-require(dbo)
-ff <- system.file(package = "gpxui", "Garmin65s") |> as_dirInput_output()
-con <- dbcon(server = "localhost", db = "tests")
-
-x <- read_all_waypoints(ff)
-gpx_to_database(con, x, tab = "GPS_POINTS")
-
-x <- read_all_tracks(ff)
-gpx_to_database(con, x, tab = "GPS_TRACKS")
-
-DBI::dbDisconnect(con)
-
 }

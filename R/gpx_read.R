@@ -1,9 +1,6 @@
 
 #' read_waypoints
 #' @export
-#' @examples
-#' f = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
-#' read_waypoints(f)
 read_waypoints <- function(x) {
   w <- st_read(x, layer = "waypoints", quiet = TRUE)
   xy <- st_coordinates(w) |> data.table()
@@ -16,9 +13,6 @@ read_waypoints <- function(x) {
 
 #' read_tracks
 #' @export
-#' @examples
-#' f = system.file(package = "gpxui", "Garmin65s", "GPX", "Current", "Current.gpx")
-#' read_tracks(f)
 read_tracks <- function(x) {
   w <- st_read(x, layer = "track_points", quiet = TRUE)
   xy <- st_coordinates(w) |> data.table()
@@ -32,9 +26,6 @@ read_tracks <- function(x) {
 #' deviceID
 #' @param x a data.frame  uploaded to the server by dirInput
 #' @export
-#' @examples
-#' x <- system.file(package = "gpxui", "Garmin65s", "GPX") |> as_dirInput_output()
-#' deviceID(x)
 deviceID <- function(x) {
 
   path_to_id = subset(x, name == "DEVICE_ID.txt")$datapath
@@ -57,10 +48,6 @@ deviceID <- function(x) {
 #' @param  ff  a data.frame  uploaded to the server by dirInput
 #' @param int_names_only keep only numeric names
 #' @export
-#' @examples 
-#' system.file(package = "gpxui", "Garmin65s") |> 
-#' as_dirInput_output() |>
-#' read_all_waypoints()
 read_all_waypoints <- function(ff,int_names_only = TRUE) {
 
   gid = deviceID(ff)
@@ -93,10 +80,6 @@ read_all_waypoints <- function(ff,int_names_only = TRUE) {
 #' @description  read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
 #' @param  ff  a data.frame  uploaded to the server by dirInput
 #' @export
-#' @examples
-#' system.file(package = "gpxui", "Garmin65s") |>
-#' as_dirInput_output() |>
-#' read_all_tracks()
 read_all_tracks <- function(ff) {
 
   gid = deviceID(ff)

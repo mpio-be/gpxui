@@ -4,15 +4,11 @@
 \alias{deviceID}
 \title{deviceID}
 \usage{
-deviceID(p)
+deviceID(x)
 }
 \arguments{
 \item{x}{a data.frame  uploaded to the server by dirInput}
 }
 \description{
 deviceID
-}
-\examples{
-p <- system.file(package = "gpxui", "Garmin65s", "GPX") |> as_dirInput_output()
-deviceID(p)
 }

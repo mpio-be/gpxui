@@ -9,7 +9,3 @@ read_tracks(x)
 \description{
 read_tracks
 }
-\examples{
-f = system.file(package = "gpxui", "Garmin65s", "GPX", "Current", "Current.gpx")
-read_tracks(f)
-}

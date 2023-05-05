@@ -12,8 +12,3 @@ read_all_tracks(ff)
 \description{
 read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
 }
-\examples{
-system.file(package = "gpxui", "Garmin65s") |>
-as_dirInput_output() |>
-read_all_tracks()
-}

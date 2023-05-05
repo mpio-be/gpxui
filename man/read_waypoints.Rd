@@ -9,7 +9,3 @@ read_waypoints(x)
 \description{
 read_waypoints
 }
-\examples{
-f = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
-read_waypoints(f)
-}

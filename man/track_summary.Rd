@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{track_summary}
 \alias{track_summary}
-\title{track_summary #TODO}
+\title{track_summary}
 \usage{
 track_summary(x)
 }
 \description{
-track_summary #TODO
+track_summary
 }
 \examples{
 system.file(package = "gpxui", "Garmin65s") |> 

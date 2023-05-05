@@ -10,7 +10,7 @@ as_dirInput_output <- function(dr) {
   data.frame(name = basename(ff), datapath = ff)
 }
 
-
+#' @export
 dt2lines <- function(x, grp) {
   x |>
     dplyr::group_by(.data[[grp]]) |>
@@ -28,6 +28,7 @@ dt2lines <- function(x, grp) {
     st_cast("MULTILINESTRING")
 }
 
+#' @export
 st_bbox_all = function(x) {
 
   if(!is.null(unique(x)[[1]])) {
@@ -53,7 +54,7 @@ st_bbox_all = function(x) {
 
 }
 
-#' track_summary #TODO
+#' track_summary
 #' @export
 #' @examples 
 #' system.file(package = "gpxui", "Garmin65s") |> 
@@ -66,8 +67,8 @@ track_summary <- function(x) {
   
   if(!is.null(x)) {
 
-    o = sf::st_drop_geometry(xs) |> setDT()
-    o[, dist := sf::st_length(xs) |> units::set_units("km")]
+    o = sf::st_drop_geometry(x) |> setDT()
+    o[, dist := sf::st_length(x) |> units::set_units("km")]
     o[, deltat := difftime(max_dt, min_dt, units = "hours")]
 
     o = o[, .(
@@ -94,7 +95,7 @@ track_summary <- function(x) {
 
 }
 
-#' points_summary #TODO
+#' points_summary
 #' @export
 #' @examples
 #' x = 

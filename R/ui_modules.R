@@ -66,7 +66,7 @@ dirInput <- function(inputId, label = NULL, width = "100%", buttonLabel = "GPS u
 
 #' gpx_file_upload_check
 #' @export 
-#' @param  x a data.frame returned by UI after dir upload
+#' @param  x a data.frame returned by UI after dir upload. See [gpxui::dirInput()]
 #' 
 gpx_file_upload_check <- function(x) { 
 

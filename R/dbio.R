@@ -4,22 +4,9 @@
 #' saves new entries to database
 #' @param con a connection to db
 #' @param x a data.table; output of read_all_waypoints() or read_all_tracks().
-#' @param tab database table 
+#' @param tab database table (GPS_TRACKS, GPS_POINTS)
 #' @return a data.frame containing last entry in db prior to database update and the number of updated entries. 
 #' @export
-#' @examples
-#' require(dbo)
-#' ff <- system.file(package = "gpxui", "Garmin65s") |> as_dirInput_output()
-#' con <- dbcon(server = "localhost", db = "tests")
-#'
-#' x <- read_all_waypoints(ff)
-#' gpx_to_database(con, x, tab = "GPS_POINTS")
-#' 
-#' x <- read_all_tracks(ff)
-#' gpx_to_database(con, x, tab = "GPS_TRACKS")
-#'
-#' DBI::dbDisconnect(con)
-#'
 gpx_to_database <- function(con, x, tab) {
 
   gid = x$gps_id[1]
@@ -44,9 +31,14 @@ gpx_to_database <- function(con, x, tab) {
 
 }
 
-
-
-read_GPX_table <- function(con, dt, tab, sf = FALSE) {
+#' read_GPX_table
+#' Fetch database tables
+#' @param con a connection to db
+#' @param tab database table   (GPS_TRACKS, GPS_POINTS)
+#' @param dt  database valid datetime. Only entries after this are returned. Detault to "1900-01-01"
+#' @param sf when TRUE returns a sf df. default to FALSE
+#' @export
+read_GPX_table <- function(con, tab, dt = "1900-01-01", sf = FALSE) {
 
   o = dbq(con, glue("SELECT * FROM {tab} where datetime_ > {shQuote(dt)}"))
   
