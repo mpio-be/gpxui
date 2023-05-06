@@ -17,21 +17,24 @@
   tags <- shiny::tags
 
 options(shiny.autoreload = TRUE)
-options(shiny.maxRequestSize = 10 * 1024*2)
+options(shiny.maxRequestSize = 10 * 1024^3)
 options(dbo.tz = "Europe/Berlin")
 
 SERVER = "localhost"
 DB = "tests"
 
 
-ttt = function() {
+cleandb = function(db = "tests", server = "localhost") {
 
-  con <- dbcon(server = "localhost", db = "tests")
-  DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-  DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
-  DBI::dbDisconnect(con)
+  if (db == "tests") {
+    con <- dbcon(server = server, db = db)
+    DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
+    DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
+    DBI::dbDisconnect(con)
+    message("GPS_POINTS & GPS_TRACKS tables are empty now.")
+  }
 
 }
 
 
-ttt()
+cleandb()

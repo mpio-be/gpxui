@@ -1,12 +1,8 @@
 
-require(dbo)
+cleandb()
 
-f = system.file(package = "gpxui", "Garmin65s", "GPX")
-x <- as_dirInput_output(f)
-
-# populate db tables in case they are empty
-gpx_to_database(server = "localhost", db = "tests", read_all_waypoints(x), tab = "GPS_POINTS")
-gpx_to_database(server = "localhost", db = "tests", read_all_tracks(x), tab = "GPS_TRACKS")
+gpx_to_database(server = "localhost", db = "tests", read_all_waypoints(dirout), tab = "GPS_POINTS")
+gpx_to_database(server = "localhost", db = "tests", read_all_tracks(dirout), tab = "GPS_TRACKS")
 
 PTS = read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
 TRK = read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
@@ -14,10 +10,10 @@ BBO  = st_bbox_all(list(PTS, TRK))
 
 
 test_that("gpx_file_upload_check() works for both full and empty input", {
-  o = gpx_file_upload_check(x)
+  o = gpx_file_upload_check(dirout)
   expect_s3_class(o, "shiny.tag.list")
 
-  o = gpx_file_upload_check(head(x, 0))
+  o = gpx_file_upload_check(head(dirout, 0))
   expect_s3_class(o, "shiny.tag.list")
 })
 
@@ -61,9 +57,3 @@ test_that("gpx_summary() works ", {
   
 
 })
-
-
-con = dbcon(server = "localhost", db = "tests")
-DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
-DBI::dbDisconnect(con)

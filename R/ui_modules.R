@@ -2,7 +2,7 @@
 #' @export
 #' @examples
 #' require(shiny)
-#' # options(shiny.maxRequestSize = 10 * 1024^2)
+#' options(shiny.maxRequestSize = 10 * 1024^3)
 #'
 #' ui <- fluidPage(
 #'   sidebarLayout(
@@ -25,44 +25,81 @@
 
 #' shinyApp(ui, server)
 
-dirInput <- function(inputId, label = NULL, buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
+# dirInput <- function(inputId, label = NULL, buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
+#   inputTag <- tags$input(
+#     id              = inputId,
+#     name            = inputId,
+#     type            = "file",
+#     webkitdirectory = TRUE,
+#     style           = "display: none;"
+#   )
+
+
+#   div(
+#     class = "form-group shiny-input-container",
+
+#     shiny:::shinyInputLabel(inputId, label),
+#     div(
+#       class = "input-group",
+#       tags$label(
+#         class = "input-group-btn input-group-prepend",
+#         span(
+#           class = "btn btn-dark",
+#           buttonLabel,
+#           inputTag
+#         )
+#       ),
+#       tags$input(
+#         type = "text",
+#         class = "form-control",
+#         placeholder = placeholder,
+#         readonly = "readonly"
+#       )
+#     ),
+#     tags$div(
+#       id = paste(inputId, "_progress", sep = ""),
+#       class = "progress active shiny-file-input-progress",
+#       tags$div(class = "progress-bar bg-danger", role = "progressbar")
+#     )
+#   )
+# }
+
+
+dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = "Browse...", placeholder = "No files selected.") {
   inputTag <- tags$input(
-    id              = inputId,
-    name            = inputId,
-    type            = "file",
-    webkitdirectory = TRUE,
-    style           = "display: none;"
+    id = inputId, name = inputId, type = "file", webkitdirectory = TRUE, onchange = "pressed()",
+    style = "display: none;"
   )
 
 
   div(
-    class = "form-group shiny-input-container",
-
-    shiny:::shinyInputLabel(inputId, label),
-    div(
+    class = "form-group shiny-input-container", style = htmltools::css(width = validateCssUnit(width)),
+    shiny:::shinyInputLabel(inputId, label), div(
       class = "input-group",
       tags$label(
         class = "input-group-btn input-group-prepend",
         span(
-          class = "btn btn-dark",
-          buttonLabel,
+          class = "btn btn-default bttn-unite btn-danger btn-large", buttonLabel,
           inputTag
         )
-      ),
-      tags$input(
-        type = "text",
-        class = "form-control",
-        placeholder = placeholder,
-        readonly = "readonly"
+      ), tags$input(
+        type = "text", class = "form-control",
+        placeholder = placeholder, readonly = "readonly"
       )
     ),
     tags$div(
       id = paste(inputId, "_progress", sep = ""),
       class = "progress active shiny-file-input-progress",
-      tags$div(class = "progress-bar bg-danger", role = "progressbar")
+      tags$div(class = "progress-bar")
     )
   )
 }
+
+
+
+
+
+
 
 #' gpx_file_upload_check
 #' @export 

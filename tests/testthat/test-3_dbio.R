@@ -1,13 +1,9 @@
 
-require(dbo)
-x = as_dirInput_output(system.file(package = "gpxui", "Garmin65s", "GPX"))
-con = dbcon(server = "localhost", db = "tests")
-DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
+cleandb()
 
 test_that("gpx_to_database() works as expected on valid inputs", {
-  pp = read_all_waypoints(x)
-  tt = read_all_tracks(x)
+  pp = read_all_waypoints(dirout)
+  tt = read_all_tracks(dirout)
 
   # POINTS
   o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
@@ -38,7 +34,7 @@ test_that("gpx_to_database() does not error on invalid inputs", {
   expect_true(o$rows_in_db_after_update == 0)
   
   # NA gps_id
-  pp = read_all_waypoints(x)[, gps_id := NA]
+  pp = read_all_waypoints(dirout)[, gps_id := NA]
 
   o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
   expect_s3_class(o, "data.frame")
@@ -48,9 +44,6 @@ test_that("gpx_to_database() does not error on invalid inputs", {
   
 
 })
-
-
-
 
 test_that("read_GPX_table() works as expected", {
 
@@ -71,7 +64,3 @@ test_that("read_GPX_table() works as expected", {
   
 
 })
-
-DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
-DBI::dbDisconnect(con)
