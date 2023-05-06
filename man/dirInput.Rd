@@ -4,13 +4,7 @@
 \alias{dirInput}
 \title{dirInput}
 \usage{
-dirInput(
-  inputId,
-  label = "choose dir",
-  width = NULL,
-  buttonLabel = "Browse...",
-  placeholder = "No files selected."
-)
+dirInput(inputId, label = NULL, placeholder = "No dir selected.")
 }
 \description{
 dirInput
@@ -22,7 +16,7 @@ options(shiny.maxRequestSize = 10 * 1024^3)
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
-      dirInput("fileIn", "Choose dir")
+      dirInput("fileIn")
     ),
     mainPanel(
       tableOutput("contents")

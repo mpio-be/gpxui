@@ -14,16 +14,17 @@ Imports:
     methods,
     glue,
     stringr,
-    sf
-Suggests:
+    sf,
     leaflet,
-    gridlayout,
     bslib,
     shinyWidgets,
+    gridlayout,
+    shinyWidgets
+Suggests:
     knitr,
     testthat (>= 3.0.0)
 Remotes:
-    rstudio/gridlayout,
+    rstudio/bslib,
     mpio-be/dbo
 License: GPL (>= 2)
 Encoding: UTF-8

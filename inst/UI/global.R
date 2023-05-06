@@ -6,12 +6,12 @@
 # ==========================================================================
 
 #! Packages, functions
-  sapply(c( # TODO update Imports
+  sapply(c( 
     "gpxui",
     "leaflet",
     "gridlayout",
     "bslib", 
-    "shinyWidgets",
+    # "shinyWidgets",
     "sf",
     "dbo"
   ), require, character.only = TRUE, quietly = TRUE)
@@ -27,9 +27,8 @@
   }
 
 #! Options
-
   options(shiny.autoreload = TRUE)
-  options(shiny.maxRequestSize = 10 * 1024^3)
+  options(shiny.maxRequestSize = 10 * 1024^2)
   options(dbo.tz = "Europe/Berlin")
 
 #* Variables

@@ -7,7 +7,7 @@
 #' ui <- fluidPage(
 #'   sidebarLayout(
 #'     sidebarPanel(
-#'       dirInput("fileIn", "Choose dir")
+#'       dirInput("fileIn")
 #'     ),
 #'     mainPanel(
 #'       tableOutput("contents")
@@ -25,78 +25,87 @@
 
 #' shinyApp(ui, server)
 
-# dirInput <- function(inputId, label = NULL, buttonLabel = "GPS upload", placeholder = "./GARMIN/Garmin/GPX") {
-#   inputTag <- tags$input(
-#     id              = inputId,
-#     name            = inputId,
-#     type            = "file",
-#     webkitdirectory = TRUE,
-#     style           = "display: none;"
-#   )
-
-
-#   div(
-#     class = "form-group shiny-input-container",
-
-#     shiny:::shinyInputLabel(inputId, label),
-#     div(
-#       class = "input-group",
-#       tags$label(
-#         class = "input-group-btn input-group-prepend",
-#         span(
-#           class = "btn btn-dark",
-#           buttonLabel,
-#           inputTag
-#         )
-#       ),
-#       tags$input(
-#         type = "text",
-#         class = "form-control",
-#         placeholder = placeholder,
-#         readonly = "readonly"
-#       )
-#     ),
-#     tags$div(
-#       id = paste(inputId, "_progress", sep = ""),
-#       class = "progress active shiny-file-input-progress",
-#       tags$div(class = "progress-bar bg-danger", role = "progressbar")
-#     )
-#   )
-# }
-
-
-dirInput <- function(inputId, label = "Choose directory", width = NULL, buttonLabel = "Browse...", placeholder = "No files selected.") {
-  inputTag <- tags$input(
-    id = inputId, name = inputId, type = "file", webkitdirectory = TRUE, onchange = "pressed()",
-    style = "display: none;"
-  )
-
+dirInput <- function(inputId, label = NULL, placeholder = "No dir selected.") {
 
   div(
-    class = "form-group shiny-input-container", style = htmltools::css(width = validateCssUnit(width)),
-    shiny:::shinyInputLabel(inputId, label), div(
+    class = "form-group shiny-input-container",
+    shiny:::shinyInputLabel(inputId, NULL),
+    div(
       class = "input-group",
       tags$label(
         class = "input-group-btn input-group-prepend",
         span(
-          class = "btn btn-default bttn-unite btn-danger btn-large", buttonLabel,
-          inputTag
+          class = paste("btn btn-default", "btn-secondary"), a(icon("folder-open"), "Browse"),
+          tags$input(
+            id = inputId,
+            name = inputId,
+            type = "file",
+            webkitdirectory = TRUE,
+            onchange = "pressed()",
+            style = "display: none;"
+          )
         )
-      ), tags$input(
-        type = "text", class = "form-control",
-        placeholder = placeholder, readonly = "readonly"
+      ),
+      tags$input(
+        type = "text",
+        class = "form-control",
+        placeholder = placeholder,
+        readonly = "readonly"
       )
     ),
     tags$div(
       id = paste(inputId, "_progress", sep = ""),
       class = "progress active shiny-file-input-progress",
-      tags$div(class = "progress-bar")
+      tags$div(class = "progress-bar bg-success")
     )
   )
+
+
+
+
 }
 
+#' bs5modal
+#' @export
+bs5modal <- function(inputId, label = inputId, ...) {
 
+  div(
+    p(
+      type = "button",
+      `data-bs-toggle` = "modal",
+      `data-bs-target` = paste0("#", inputId),
+      span(
+        icon("info-circle"),
+        label,
+        class = "badge rounded-pill bg-secondary"
+      )
+    ) |>
+      h5(),
+    div(
+      class = "modal", id = inputId,
+      div(
+        class = "modal-dialog modal-xl",
+        div(
+          class = "modal-content",
+          div(
+            class = "modal-header",
+            label,
+            tags$button(
+              class = "btn-close",
+              `data-bs-dismiss` = "modal",
+              `aria-label` = "Close"
+            )
+          ),
+          div(
+            class = "modal-body",
+            ...
+          )
+        )
+      )
+    )
+  )
 
+}
 
 
 

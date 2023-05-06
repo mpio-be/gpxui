@@ -3,6 +3,7 @@
 export(DT2gpx)
 export(as_dirInput_output)
 export(basemap)
+export(bs5modal)
 export(deviceID)
 export(dirInput)
 export(dt2lines)

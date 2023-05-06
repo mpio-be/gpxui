@@ -1,49 +1,54 @@
-export = "csv"
-export = "database"
 
 grid_page(
 
   # includeCSS('~/github/mpio-be/gpxui/inst/style.css'), 
-  includeCSS(system.file(package = "gpxui", "style.css")),
+  includeCSS(system.file(package = "gpxui", "www", "style.css")),
 
   theme = bs_theme(
     version = 5, bg = "#06262e", fg = "#e7debd",
   ),
   layout = c(
     "IO        map feedback",
-    "explore   map summary",
     "explore   map summary"
   ),
   col_sizes = c("1fr", "3fr", "1fr"),
-  row_sizes = c("2fr", "2fr", "2fr"),
+  row_sizes = c("2fr", "2fr"),
   gap_size = "0px",
 
 
 #* Upload
   grid_card(area = "IO",
 
-  card_header( p(icon("location"), "Garmin GPS manager") |> h4()),
-  div("TODO: open md help"), 
+  card_header( span(icon("location"), "Garmin GPS manager") |> h4()),
+
+  bs5modal("help", "Help",
   
-  dirInput("upload_GPX", label = NULL, placeholder = "./GARMIN/Garmin/GPX"), 
+  includeMarkdown(system.file(package = "gpxui", "www", "help.md"))
+  
+  ),
 
 
-  pickerInput(
+  dirInput("upload_GPX", label = NULL, placeholder = "./GARMIN/Garmin/GPX") , 
+
+
+  selectInput(
     inputId = "export_object",
     label = "Pick to export:",
     choices = EXPORT_TABLES,
-    multiple = FALSE,
-    options = list(size = 3)
-  ),
+    multiple = FALSE
+  ) |> div(),
 
-  pickerInput(
+
+  selectInput(
     inputId = "export_class",
     label = "Export as:",
     choices = c("gpx", "csv"),
     multiple = FALSE
-  ),
+  ), 
 
-  downloadButton("download_points", "Export"),
+  downloadButton("download_points", "Export", class = "btn-secondary") |> 
+  div() ,
+
 
 
   # invisible input container for last datetime in db
@@ -63,19 +68,17 @@ grid_page(
   
   card_header("Explore database" |> tags$b()),
 
-  pickerInput(
+  selectInput(
     inputId = "gps_id",
     label = "Select GPSs:",
     choices = GPS_IDS,
-    multiple = TRUE,
-    options = list(size = 3)
+    multiple = TRUE
   )
   
   ,
 
-  airDatepickerInput(inputId = "show_after",
-    label = "Pick start time:",
-    timepicker = TRUE
+  dateInput(inputId = "show_after",
+    label = "Pick a start date:"
     )
 
 
