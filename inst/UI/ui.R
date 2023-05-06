@@ -10,24 +10,41 @@ grid_page(
     version = 5, bg = "#06262e", fg = "#e7debd",
   ),
   layout = c(
-    "upload    map summary",
-    "download  map summary",
-    "feedback  map summary"
+    "IO        map feedback",
+    "explore   map summary",
+    "explore   map summary"
   ),
-  col_sizes = c("1fr", "3fr", "0.5fr"),
-  row_sizes = c("3fr", "2fr", "2fr"),
+  col_sizes = c("1fr", "3fr", "1fr"),
+  row_sizes = c("2fr", "2fr", "2fr"),
   gap_size = "0px",
 
 
 #* Upload
-  grid_card(area = "upload",
+  grid_card(area = "IO",
 
   card_header( p(icon("location"), "Garmin GPS manager") |> h4()),
-  div("open md help"), 
-  dirInput("upload_GPX"), 
+  div("TODO: open md help"), 
+  
+  dirInput("upload_GPX", label = NULL, placeholder = "./GARMIN/Garmin/GPX"), 
 
 
-  dateInput("show_after", "Show after:"), 
+  pickerInput(
+    inputId = "export_object",
+    label = "Pick to export:",
+    choices = EXPORT_TABLES,
+    multiple = FALSE,
+    options = list(size = 3)
+  ),
+
+  pickerInput(
+    inputId = "export_class",
+    label = "Export as:",
+    choices = c("gpx", "csv"),
+    multiple = FALSE
+  ),
+
+  downloadButton("download_points", "Export"),
+
 
   # invisible input container for last datetime in db
   div(
@@ -42,9 +59,29 @@ grid_page(
   ),
 
 #* Download
-  grid_card(area = "download",
+  grid_card(area = "explore",
   
-    downloadButton("download_points", "Export")
+  card_header("Explore database" |> tags$b()),
+
+  pickerInput(
+    inputId = "gps_id",
+    label = "Select GPSs:",
+    choices = GPS_IDS,
+    multiple = TRUE,
+    options = list(size = 3)
+  )
+  
+  ,
+
+  airDatepickerInput(inputId = "show_after",
+    label = "Pick start time:",
+    timepicker = TRUE
+    )
+
+
+
+
+
 
   ),
 

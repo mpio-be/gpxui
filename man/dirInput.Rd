@@ -6,9 +6,10 @@
 \usage{
 dirInput(
   inputId,
-  label = NULL,
-  buttonLabel = "GPS upload",
-  placeholder = "./GARMIN/Garmin/GPX"
+  label = "choose dir",
+  width = NULL,
+  buttonLabel = "Browse...",
+  placeholder = "No files selected."
 )
 }
 \description{
@@ -16,7 +17,7 @@ dirInput
 }
 \examples{
 require(shiny)
-# options(shiny.maxRequestSize = 10 * 1024^2)
+options(shiny.maxRequestSize = 10 * 1024^3)
 
 ui <- fluidPage(
   sidebarLayout(

@@ -12,7 +12,7 @@ gpx_to_database(server, db, x, tab)
 
 \item{db}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
 
-\item{x}{a data.table; output of read_all_waypoints() or read_all_tracks().}
+\item{x}{output of \code{\link[=read_all_waypoints]{read_all_waypoints()}} or \code{\link[=read_all_tracks]{read_all_tracks()}}.}
 
 \item{tab}{database table (GPS_TRACKS, GPS_POINTS)}
 }

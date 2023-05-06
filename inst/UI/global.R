@@ -5,36 +5,39 @@
 #' shiny::runApp('./inst/UI/', launch.browser =  TRUE)
 # ==========================================================================
 
-#! Settings
-  sapply(c(
+#! Packages, functions
+  sapply(c( # TODO update Imports
     "gpxui",
     "leaflet",
     "gridlayout",
     "bslib", 
+    "shinyWidgets",
     "sf",
     "dbo"
   ), require, character.only = TRUE, quietly = TRUE)
-  tags <- shiny::tags
 
-options(shiny.autoreload = TRUE)
-options(shiny.maxRequestSize = 10 * 1024^3)
-options(dbo.tz = "Europe/Berlin")
-
-SERVER = "localhost"
-DB = "tests"
-
-
-cleandb = function(db = "tests", server = "localhost") {
-
-  if (db == "tests") {
-    con <- dbcon(server = server, db = db)
-    DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-    DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
-    DBI::dbDisconnect(con)
-    message("GPS_POINTS & GPS_TRACKS tables are empty now.")
+  cleandb <- function(db = "tests", server = "localhost") {
+    if (db == "tests") {
+      con <- dbcon(server = server, db = db)
+      DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
+      DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
+      DBI::dbDisconnect(con)
+      message("GPS_POINTS & GPS_TRACKS tables are empty now.")
+    }
   }
 
-}
+#! Options
+
+  options(shiny.autoreload = TRUE)
+  options(shiny.maxRequestSize = 10 * 1024^3)
+  options(dbo.tz = "Europe/Berlin")
+
+#* Variables
+  SERVER = "localhost"
+  DB = "tests"
+  GPS_IDS = 1:10
+  EXPORT_TABLES = c("GPS_POINTS", "GPS_TRACKS")
+  
 
 
 cleandb()

@@ -65,7 +65,7 @@
 # }
 
 
-dirInput <- function(inputId, label = "choose dir", width = NULL, buttonLabel = "Browse...", placeholder = "No files selected.") {
+dirInput <- function(inputId, label = "Choose directory", width = NULL, buttonLabel = "Browse...", placeholder = "No files selected.") {
   inputTag <- tags$input(
     id = inputId, name = inputId, type = "file", webkitdirectory = TRUE, onchange = "pressed()",
     style = "display: none;"
