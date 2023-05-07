@@ -133,8 +133,8 @@ gpx_file_upload_check <- function(x) {
   
 
   tagList(
-    o1 |>tags$li() |>h5() , 
-    o2 |>tags$li() |>h5() 
+    o1 |>tags$li() |>tags$b() , 
+    o2 |>tags$li() |>tags$b() 
     )
 
 
@@ -145,9 +145,9 @@ gpx_file_upload_check <- function(x) {
 #' track_summary
 #' @export
 track_summary <- function(x) {
-  if (is.null(x)) o <- data.frame(Info = "No GPX track files found")
+  if (nrow(x) == 0) o <- data.table(Info = "No GPX track files found")
 
-  if (!is.null(x)) {
+  if (nrow(x) > 0) {
     o <- sf::st_drop_geometry(x) |> setDT()
     o[, dist := sf::st_length(x) |> units::set_units("km")]
     o[, deltat := difftime(max_dt, min_dt, units = "hours")]
@@ -178,9 +178,9 @@ track_summary <- function(x) {
 #' points_summary
 #' @export
 points_summary <- function(x) {
-  if (is.null(x)) o <- data.frame(Info = "No GPX waypoints files found")
+  if (nrow(x) == 0) o <- data.table(Info = "No GPX waypoints files found")
 
-  if (!is.null(x)) {
+  if (nrow(x) > 0) {
     h <-
       x |>
       sf::st_union() |>
@@ -211,8 +211,8 @@ points_summary <- function(x) {
 #' @export
 gpx_summary <- function(pts, trk) {
     
-  trk_smr = if (nrow(trk) == 0) track_summary(trk) |>  suppressWarnings()  else track_summary(trk)
-  pst_smr = if (nrow(pts) == 0) points_summary(pts) |> suppressWarnings() else points_summary(pts)
+  trk_smr = track_summary(trk)  
+  pst_smr = points_summary(pts)
 
 
   trk_tab <-

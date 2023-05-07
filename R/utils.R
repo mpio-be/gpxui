@@ -31,25 +31,28 @@ dt2lines <- function(x, grp) {
 #' @export
 st_bbox_all = function(x) {
 
-  if(!is.null(unique(x)[[1]])) {
-  x = x[sapply(x, inherits, what = "sf")]
-  x <- x[sapply(x, function(x) nrow(x) > 0)]
-
-  if (length(x) > 0) {
-    o <- lapply(x, st_bbox) |>
-      lapply(st_as_sfc)
-
-    o <- do.call(st_union, o) |>
-      st_as_sf() |>
-      st_bbox()
-  } else {
-    o <- NULL
-  }
-
-  } else o = NULL
+  # at least one sf
+  ok = sapply(x, inherits, what = "sf") |> any()
+  # and at least one valid sf
+  if(ok)
+  ok = sapply(x, function(x) nrow(x) > 0) |> any()
 
 
+
+  if(ok) {
+  x = x[sapply(x, inherits, what = "sf") & sapply(x, function(x) nrow(x) > 0)]
+ 
+  o <- lapply(x, st_bbox) |>
+    lapply(st_as_sfc)
+
+  o <- do.call(st_union, o) |>
+    st_as_sf() |>
+    st_bbox()
   
+  
+  } else 
+    o <- st_sfc(NULL, crs = 4326) |> st_as_sf() |> st_bbox()
+
   o
 
 }

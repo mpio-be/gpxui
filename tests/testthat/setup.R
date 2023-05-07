@@ -2,8 +2,6 @@ require(dbo)
 
 gpxdir <- system.file(package = "gpxui", "Garmin65s", "GPX")
 
-gpxdir <- "/home/mihai/Desktop/gpx_xx"
-
 dirout <- as_dirInput_output(gpxdir)
 
 gpxfile <- system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")

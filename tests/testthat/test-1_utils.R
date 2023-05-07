@@ -7,14 +7,14 @@ gpx_to_database(server = "localhost", db = "tests", read_all_tracks(dirout), tab
 
 
 
-test_that("as_dirInput_output returns a df", {
+test_that("as_dirInput_output() returns a df", {
 
   as_dirInput_output(gpxdir) |> expect_s3_class("data.frame")
 
 })
 
 
-test_that("st_bbox_all works in all cases", {
+test_that("st_bbox_all() works in all cases", {
 
   pts = read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
   trk = read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
@@ -23,6 +23,13 @@ test_that("st_bbox_all works in all cases", {
   
   st_bbox_all(list(pts, head(trk, 0))) |> expect_s3_class("bbox")
   
-  st_bbox_all(list(head(pts, 0), head(trk, 0))) |> expect_null()
+  st_bbox_all(list(head(pts, 0), head(trk, 0))) |> expect_s3_class("bbox")
+
+  cleandb()
+  pts = read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
+  trk = read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
+
+  st_bbox_all(list(pts, trk)) |> expect_s3_class("bbox")
+
 
 })

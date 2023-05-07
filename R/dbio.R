@@ -33,8 +33,7 @@ gpx_to_database <- function(server,db, x, tab) {
 
       o = data.frame(last_entry_before_update = lastdt, rows_in_db_after_update, tab = tab, gps_id = gid)
       } else {
-         o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
-         
+        o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
       }
 
     }
@@ -56,19 +55,29 @@ gpx_to_database <- function(server,db, x, tab) {
 #' @param server  pass to [dbo::dbcon()]
 #' @param db pass to [dbo::dbcon()]
 #' @param tab database table   (GPS_TRACKS, GPS_POINTS)
-#' @param dt  database valid datetime. Only entries after this are returned. Detault to "1900-01-01"
+#' @param dt  database valid datetime. Only entries after this are returned. Default to "1900-01-01"
+#' @param gps_id  gps id (one or more). Disregarded when missing, NA, NULL or non-numeric
 #' @param sf when TRUE returns a sf df. default to FALSE
 #' @export
-read_GPX_table <- function(server, db, tab, dt = "1900-01-01", sf = FALSE) {
+read_GPX_table <- function(server, db, tab, dt = "1900-01-01", gps_id, sf = FALSE) {
 
   con = dbcon(server = server, db = db)
   on.exit(DBI::dbDisconnect(con))
 
+  if(!missing(gps_id))
+  gps_id = as.numeric(gps_id) |> unique() |> na.omit()
 
-  o = dbq(con, glue("SELECT * FROM {tab} where datetime_ > {shQuote(dt)}"))
+  sql = glue("SELECT * FROM {tab} where datetime_ > {shQuote(dt)}")
+
+  if( !missing(gps_id) && length(gps_id) > 0 && !is.na(gps_id) &&  !is.null(gps_id) )
+    sql = glue("{sql} AND gps_id IN ( {paste(gps_id, collapse = ',')} )")
   
-  if(sf) {
-    o = st_as_sf(o, coords = c("lon", "lat"), crs = 4326)
+  o = dbq(con,  sql )
+  
+
+
+  if(sf & nrow(o) > 0) {
+    o = st_as_sf(o, coords = c("lon", "lat") , crs = 4326)
 
     if(tab == "GPS_TRACKS")
       o = dt2lines(o, "seg_id")

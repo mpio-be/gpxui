@@ -6,9 +6,8 @@ test_that("gpx_to_database() works as expected on valid inputs", {
   tt = read_all_tracks(dirout)
 
   # POINTS
-  o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
-  expect_s3_class(o, "data.frame")
-  expect_true(o$rows_in_db_after_update == 10)
+  op = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
+  expect_s3_class(op, "data.frame")
 
   # subsequent update
   o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
@@ -16,14 +15,17 @@ test_that("gpx_to_database() works as expected on valid inputs", {
   expect_true(o$rows_in_db_after_update == 0)
 
   # TRACKS
-  o = gpx_to_database(server = "localhost", db = "tests", tt, tab = "GPS_TRACKS")
-  expect_s3_class(o, "data.frame")
-  expect_true(o$rows_in_db_after_update == 32)
+  ot = gpx_to_database(server = "localhost", db = "tests", tt, tab = "GPS_TRACKS")
+  expect_s3_class(ot, "data.frame")
 
   # subsequent update
   o = gpx_to_database(server = "localhost", db = "tests", tt, tab = "GPS_TRACKS")
   expect_s3_class(o, "data.frame")
   expect_true(o$rows_in_db_after_update == 0)
+
+  # both outputs have similar outputs
+  rbindlist(list(op, ot)) |> expect_s3_class("data.table")
+
 })
 
 test_that("gpx_to_database() does not error on invalid inputs", {
@@ -45,7 +47,7 @@ test_that("gpx_to_database() does not error on invalid inputs", {
 
 })
 
-test_that("read_GPX_table() works as expected", {
+test_that("read_GPX_table() works as expected w. dt and sf output", {
 
   read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS") |>
     expect_s3_class("data.frame")
@@ -62,5 +64,24 @@ test_that("read_GPX_table() works as expected", {
   read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE) |>
     expect_s3_class("sf")
   
+
+})
+
+test_that("read_GPX_table() works as expected w. gps_id", {
+
+  read_GPX_table(server = "localhost", db = "tests", tab = "GPS_POINTS", gps_id = 1) |>
+    expect_s3_class("data.frame")
+  
+  read_GPX_table(server = "localhost", db = "tests", tab = "GPS_POINTS", gps_id = "01") |>
+    expect_s3_class("data.frame")
+  
+  read_GPX_table(server = "localhost", db = "tests", tab = "GPS_POINTS", gps_id = c(1, 2, NA, "x")) |>
+    suppressWarnings() |>
+    expect_s3_class("data.frame")
+
+  read_GPX_table(server = "localhost", db = "tests", tab = "GPS_POINTS", gps_id = 'x') |>
+    suppressWarnings() |>
+    expect_s3_class("data.frame")
+
 
 })

@@ -11,7 +11,6 @@
     "leaflet",
     "gridlayout",
     "bslib", 
-    # "shinyWidgets",
     "sf",
     "dbo"
   ), require, character.only = TRUE, quietly = TRUE)

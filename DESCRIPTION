@@ -17,14 +17,11 @@ Imports:
     sf,
     leaflet,
     bslib,
-    shinyWidgets,
-    gridlayout,
-    shinyWidgets
+    gridlayout
 Suggests:
     knitr,
     testthat (>= 3.0.0)
 Remotes:
-    rstudio/bslib,
     mpio-be/dbo
 License: GPL (>= 2)
 Encoding: UTF-8

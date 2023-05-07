@@ -51,6 +51,16 @@ test_that("track_summary() works for both full and empty input", {
 })
 
 test_that("gpx_summary() works ", {
+  gpx_summary(PTS, TRK) |>
+    expect_s3_class("shiny.tag")
+})
+
+test_that("gpx_summary() works on empty tables", {
+
+  cleandb()
+
+  PTS <- read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
+  TRK <- read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
 
   gpx_summary(PTS, TRK) |>
     expect_s3_class("shiny.tag")

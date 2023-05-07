@@ -5,7 +5,7 @@
 \title{read_GPX_table
 Fetch database tables}
 \usage{
-read_GPX_table(server, db, tab, dt = "1900-01-01", sf = FALSE)
+read_GPX_table(server, db, tab, dt = "1900-01-01", gps_id, sf = FALSE)
 }
 \arguments{
 \item{server}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
@@ -14,7 +14,9 @@ read_GPX_table(server, db, tab, dt = "1900-01-01", sf = FALSE)
 
 \item{tab}{database table   (GPS_TRACKS, GPS_POINTS)}
 
-\item{dt}{database valid datetime. Only entries after this are returned. Detault to "1900-01-01"}
+\item{dt}{database valid datetime. Only entries after this are returned. Default to "1900-01-01"}
+
+\item{gps_id}{gps id (one or more). Disregarded when missing, NA, NULL or non-numeric}
 
 \item{sf}{when TRUE returns a sf df. default to FALSE}
 }
