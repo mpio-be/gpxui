@@ -36,9 +36,7 @@ gpx_to_database <- function(server,db, x, tab) {
         o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
       }
 
-    }
-
-  if(is.null(x) ) {
+    } else {
     o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
   }
 
@@ -69,7 +67,7 @@ read_GPX_table <- function(server, db, tab, dt = "1900-01-01", gps_id, sf = FALS
 
   sql = glue("SELECT * FROM {tab} where datetime_ > {shQuote(dt)}")
 
-  if( !missing(gps_id) && length(gps_id) > 0 && !is.na(gps_id) &&  !is.null(gps_id) )
+  if( !missing(gps_id) && length(gps_id) > 0 )
     sql = glue("{sql} AND gps_id IN ( {paste(gps_id, collapse = ',')} )")
   
   o = dbq(con,  sql )

@@ -65,50 +65,6 @@ dirInput <- function(inputId, label = NULL, placeholder = "No dir selected.") {
 
 }
 
-#' bs5modal
-#' @export
-bs5modal <- function(inputId, label = inputId, ...) {
-
-  div(
-    p(
-      type = "button",
-      `data-bs-toggle` = "modal",
-      `data-bs-target` = paste0("#", inputId),
-      span(
-        icon("info-circle"),
-        label,
-        class = "badge rounded-pill bg-secondary"
-      )
-    ) |>
-      h5(),
-    div(
-      class = "modal", id = inputId,
-      div(
-        class = "modal-dialog modal-xl",
-        div(
-          class = "modal-content",
-          div(
-            class = "modal-header",
-            label,
-            tags$button(
-              class = "btn-close",
-              `data-bs-dismiss` = "modal",
-              `aria-label` = "Close"
-            )
-          ),
-          div(
-            class = "modal-body",
-            ...
-          )
-        )
-      )
-    )
-  )
-
-}
-
-
-
 
 #' gpx_file_upload_check
 #' @export 
@@ -122,19 +78,22 @@ gpx_file_upload_check <- function(x) {
 
 
   if (is.na(did)) 
-    o1 = "GPS ID not found!" else 
-    o1 = glue("<span class='badge rounded-pill bg-success'>GPS {did}</span>  detected.") |> HTML()
+    o1 = "<span class='badge rounded-pill bg-warning'> GPS ID not found! </span>" |> HTML() |> h3() else 
+    o1 = glue("<span class='badge rounded-pill bg-success'>GPS {did}</span> detected.") |> HTML() |> h3()
 
   ngpx = nrow(d[str_detect(name, "\\.gpx$")])
 
   if (ngpx == 0) 
   o2 = glue("Files uploaded OK but the selected folder contains no {tags$code('gpx')} files. Did you select the correct folder?") |> HTML() else 
-  o2 = glue("Found {ngpx} files.") 
+  o2 = glue("Selected directory got {ngpx} {code('gpx')} file(s).") |>
+    HTML() |>
+    tags$b()
   
 
-  tagList(
-    o1 |>tags$li() |>tags$b() , 
-    o2 |>tags$li() |>tags$b() 
+  div(
+    p(o1) , 
+    p(o2), 
+    hr()
     )
 
 
@@ -242,4 +201,11 @@ gpx_summary <- function(pts, trk) {
 
 
 
+}
+
+
+#' ctrl_title
+#' @export 
+ctrl_title <- function(txt, icon = "circle", class = "text-danger") {
+  span(icon(icon), txt, class = class) |> strong()
 }

@@ -21,58 +21,74 @@ observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)
   observeEvent(input$upload_GPX, {
     x = run_update()
 
-
     updateTextInput(session, "last_pts_dt", value = x[tab == "GPS_POINTS", last_entry_before_update |> as.character()] )
     updateTextInput(session, "last_trk_dt", value = x[tab == "GPS_TRACKS", last_entry_before_update |> as.character()] )
-    updateNumericInput(session, "gps_id", value = na.omit(o$gps_id)[1] )
+    updateNumericInput(session, "gps_id", value = na.omit(x$gps_id)[1] )
   
   })
 
-#* Feedback on dir upload to server (before db upload)
-  output$file_upload_feedback <- renderUI({
-    gpx_file_upload_check(input$upload_GPX)
-  }) |>
-    bindEvent(input$upload_GPX, ignoreNULL = TRUE)
 
-#* MAP
+#* MAP: base map
   output$MAP <- renderLeaflet({
     basemap()
   })
 
-  # Last points and tracks after GPS upload
-  observe({
-    req(input$last_trk_dt)
+#* MAP: update map
+  # on upload
+  observeEvent(input$upload_GPX ,{
 
-    pts <- read_GPX_table(SERVER, DB, "GPS_POINTS", input$last_trk_dt, sf = TRUE)
+    pts <- read_GPX_table(SERVER, DB, "GPS_POINTS", input$last_pts_dt, sf = TRUE)
     trk <- read_GPX_table(SERVER, DB, "GPS_TRACKS", input$last_trk_dt, sf = TRUE)
     bbox <- st_bbox_all(list(pts, trk))
 
     leafletProxy("MAP") |>
       gpxmap(bbox, pts, trk)
   })
-  
 
-#* Feedback post upload or  on explore
+  # on explore  
+  observeEvent(input$go_explore,{
 
-  # summary
-  output$track_summary <- renderUI({
-
-    gpx_summary(
-      read_GPX_table(SERVER, DB,  "GPS_POINTS", input$last_trk_dt, input$gps_id, sf = TRUE), 
-      read_GPX_table(SERVER, DB, "GPS_TRACKS",  input$last_trk_dt, input$gps_id, sf = TRUE)
-    )
-
-  }) |> bindEvent(input$go_explore, ignoreNULL = TRUE)
-
-  # map
-  observeEvent(input$go_explore, {
-    pts <- read_GPX_table(SERVER, DB, "GPS_POINTS", input$show_after, sf = TRUE)
-    trk <- read_GPX_table(SERVER, DB, "GPS_TRACKS", input$show_after, sf = TRUE)
+    pts <- read_GPX_table(SERVER, DB, "GPS_POINTS", input$show_after, input$gps_id, sf = TRUE)
+    trk <- read_GPX_table(SERVER, DB, "GPS_TRACKS", input$show_after, input$gps_id, sf = TRUE)
     bbox <- st_bbox_all(list(pts, trk))
 
     leafletProxy("MAP") |>
       gpxmap(bbox, pts, trk)
   })
+  
+
+
+
+
+
+#* Feedback 
+
+  get_feedback <- reactive({
+
+    e1 = includeMarkdown(system.file(package = "gpxui", "www", "help.md"))
+    if(!is.null(input$upload_GPX) )
+    e1 <- gpx_file_upload_check(input$upload_GPX)
+
+    e2 = ""
+
+    if(nchar(input$last_trk_dt) > 0 || nchar(input$last_pts_dt) > 0)
+    e2 <- gpx_summary(
+      read_GPX_table(SERVER, DB, "GPS_POINTS", input$last_pts_dt, input$gps_id, sf = TRUE),
+      read_GPX_table(SERVER, DB, "GPS_TRACKS", input$last_trk_dt, input$gps_id, sf = TRUE)
+    )
+
+    div(e1, e2)
+
+  })
+
+
+  output$feedback <- renderUI({
+
+    get_feedback()
+
+
+  }) 
+
 
 
 

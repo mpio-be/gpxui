@@ -11,10 +11,10 @@ BBO  = st_bbox_all(list(PTS, TRK))
 
 test_that("gpx_file_upload_check() works for both full and empty input", {
   o = gpx_file_upload_check(dirout)
-  expect_s3_class(o, "shiny.tag.list")
+  expect_s3_class(o, "shiny.tag")
 
   o = gpx_file_upload_check(head(dirout, 0))
-  expect_s3_class(o, "shiny.tag.list")
+  expect_s3_class(o, "shiny.tag")
 })
 
 test_that("dirInput is shiny", {
@@ -52,6 +52,21 @@ test_that("track_summary() works for both full and empty input", {
 
 test_that("gpx_summary() works ", {
   gpx_summary(PTS, TRK) |>
+    expect_s3_class("shiny.tag")
+})
+
+test_that("gpx_summary() works on empty tables", {
+  cleandb()
+
+  PTS <- read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
+  TRK <- read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
+
+  gpx_summary(PTS, TRK) |>
+    expect_s3_class("shiny.tag")
+})
+
+test_that("ui elements are shiny", {
+  ctrl_title("test") |>
     expect_s3_class("shiny.tag")
 })
 

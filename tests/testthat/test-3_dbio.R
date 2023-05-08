@@ -47,6 +47,22 @@ test_that("gpx_to_database() does not error on invalid inputs", {
 
 })
 
+test_that("gpx_to_database() works as when there is no device_id file", {
+
+
+  pp = read_all_waypoints(dirout_noid)
+
+  o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
+  expect_s3_class(o, "data.frame")
+  expect_true(o$rows_in_db_after_update == 0)
+
+
+  
+
+})
+
+
+
 test_that("read_GPX_table() works as expected w. dt and sf output", {
 
   read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS") |>

@@ -27,8 +27,8 @@ read_tracks <- function(x) {
 #' @param x a data.frame  uploaded to the server by dirInput
 #' @export
 deviceID <- function(x) {
-
-  path_to_id = subset(x, name == "DEVICE_ID.txt")$datapath
+  z = data.table(x)
+  path_to_id = z[name == "DEVICE_ID.txt",datapath]
 
   o = try(
     readLines(path_to_id)[1] |> 
