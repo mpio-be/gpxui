@@ -84,3 +84,28 @@ read_GPX_table <- function(server, db, tab, dt = "1900-01-01", gps_id, sf = FALS
   o
 
 }
+
+
+#' gpx_export
+#' @export
+gpx_export <- function(server, db,tab, file) {
+
+  con = dbo::dbcon(server = server, db = db)
+  on.exit(DBI::dbDisconnect(con))
+
+  x = DBI::dbReadTable(con, tab) |> setDT()
+
+  if(ncol(x) != 3 & !all(c('lat', 'lon') %in% names(x)) )
+    stop("x has to have exactly 3 columns and col 2 & 3 are lat, lon")
+
+  fnam = basename(file)
+  ext = str_extract(fnam, "gpx$|csv$")
+
+  if(ext == 'gpx')
+    DT2gpx(x, nam = names(x)[1], dest = file)
+
+  if(ext == 'csv')
+    fwrite(x, file)
+
+
+}

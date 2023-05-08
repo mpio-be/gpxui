@@ -85,7 +85,7 @@ gpx_file_upload_check <- function(x) {
 
   if (ngpx == 0) 
   o2 = glue("Files uploaded OK but the selected folder contains no {tags$code('gpx')} files. Did you select the correct folder?") |> HTML() else 
-  o2 = glue("Selected directory got {ngpx} {code('gpx')} file(s).") |>
+  o2 = glue("Selected directory has {ngpx} {code('gpx')} file(s).") |>
     HTML() |>
     tags$b()
   

@@ -61,8 +61,6 @@ test_that("gpx_to_database() works as when there is no device_id file", {
 
 })
 
-
-
 test_that("read_GPX_table() works as expected w. dt and sf output", {
 
   read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS") |>
@@ -98,6 +96,23 @@ test_that("read_GPX_table() works as expected w. gps_id", {
   read_GPX_table(server = "localhost", db = "tests", tab = "GPS_POINTS", gps_id = 'x') |>
     suppressWarnings() |>
     expect_s3_class("data.frame")
+
+
+})
+
+test_that("gpx_export() works as expected ", {
+
+  f1 = tempfile(fileext = ".gpx")
+  gpx_export(server = "localhost", db = "tests", tab = "mid_points", file = f1)
+
+  f2 = tempfile(fileext = ".csv")
+  gpx_export(server = "localhost", db = "tests", tab = "mid_tracks", file = f2)
+
+  expect_true(file.exists(f1))
+  expect_true(file.exists(f2))
+
+
+
 
 
 })

@@ -34,7 +34,7 @@
   SERVER = "localhost"
   DB = "tests"
   GPS_IDS = 1:10
-  EXPORT_TABLES = c("GPS_POINTS", "GPS_TRACKS")
+  EXPORT_TABLES = c("mid_points", "mid_tracks")
   
 
 
