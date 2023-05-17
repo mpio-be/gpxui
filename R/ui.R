@@ -1,3 +1,5 @@
+
+#' @export
 gpx_ui <- function() {
 grid_page(
 

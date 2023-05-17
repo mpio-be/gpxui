@@ -1,4 +1,5 @@
 
+#' @export
 gpx_server <- function() {
 
 function(input, output, session) {
