@@ -4,12 +4,7 @@
 basemap <- function() {
   leaflet::leaflet(options = leaflet::leafletOptions(zoomControl = TRUE)) |>
     leaflet::addTiles(group = "OSM") |>
-    leaflet::addProviderTiles("Esri.WorldTopoMap", group = "Topo") |>
-    leaflet::addProviderTiles("Esri.WorldImagery", group = "Sat_Image") |>
-    leaflet::addProviderTiles("Esri.WorldGrayCanvas", group = "Grey") |>
-    leaflet::addProviderTiles("Stamen.TerrainBackground", group = "Terrain") |>
     leaflet::addLayersControl(
-      baseGroups = c("Topo", "OSM", "Sat_Image", "Grey", "Terrain"),
       overlayGroups = c("Tracks", "Points"),
       options = leaflet::layersControlOptions(collapsed = FALSE)
     ) |>

@@ -1,7 +1,7 @@
 
 USE tests;
 
-CREATE TABLE GPS_POINTS (
+CREATE TABLE IF NOT EXISTS GPS_POINTS (
   gps_id int(2) NOT NULL        COMMENT 'gps id',
   gps_point int(10) NOT NULL    COMMENT 'gps point',
   datetime_ datetime NOT NULL   COMMENT 'gps date-time (AKDT)',
@@ -14,7 +14,7 @@ CREATE TABLE GPS_POINTS (
   KEY datetime_ (datetime_)
 ) ENGINE=ARIA;
 
-CREATE TABLE GPS_TRACKS (
+CREATE TABLE IF NOT EXISTS GPS_TRACKS (
   gps_id int(2) NOT NULL        COMMENT 'gps id',
   seg_id int(10) NOT NULL       COMMENT 'segment id',
   seg_point_id int(10) NOT NULL COMMENT 'segment point id',
