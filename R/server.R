@@ -91,7 +91,7 @@ function(input, output, session) {
 
   output$download_points <- downloadHandler(
     filename = function() {
-      glue("{tempdir()}/{input$export_object}.{input$export_class}")
+      glue("{input$export_object}.{input$export_class}")
     },
     content = function(file) {
       gpx_export(server = SERVER, db = DB, input$export_object, file)
