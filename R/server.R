@@ -94,7 +94,7 @@ function(input, output, session) {
       glue("{tempdir()}/{input$export_object}.{input$export_class}")
     },
     content = function(file) {
-      gpx_export(server = SERVER, db = db, input$export_object, file)
+      gpx_export(server = SERVER, db = DB, input$export_object, file)
     }
   )
 }
