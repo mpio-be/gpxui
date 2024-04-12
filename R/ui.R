@@ -53,7 +53,8 @@ grid_page(
       inputId = "show_after",
       label = "Pick a start date:"
     ),
-    actionButton("go_explore", "Refresh!") |> div()
+    actionButton("go_explore", "Refresh!", 
+      style="color: #103c47; background-color: #e7debd; border-color: #2e6da4") |> div()
   ),
 
   #* Map
