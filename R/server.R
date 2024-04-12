@@ -6,6 +6,7 @@ function(input, output, session) {
   observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
   #+ Read gpx, update db, update UI
+  
   run_update <- reactive({
     # read gpx
     pts <- read_all_waypoints(input$upload_GPX)
@@ -16,6 +17,7 @@ function(input, output, session) {
     updated_trk <- gpx_to_database(server = SERVER, db = DB, trk, tab = "GPS_TRACKS")
 
     rbindlist(list(updated_pts, updated_trk))
+  
   })
 
   observeEvent(input$upload_GPX, {

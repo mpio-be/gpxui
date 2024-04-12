@@ -33,11 +33,11 @@ gpx_to_database <- function(server,db, x, tab) {
 
       o = data.frame(last_entry_before_update = lastdt, rows_in_db_after_update, tab = tab, gps_id = gid)
       } else {
-        o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
+        o = data.frame(last_entry_before_update = as.POSIXct(NA), rows_in_db_after_update = 0, tab = tab, gps_id = as.numeric(NA))
       }
 
     } else {
-    o = data.frame(last_entry_before_update = NA, rows_in_db_after_update = 0, tab = tab, gps_id = NA)
+    o = data.frame(last_entry_before_update = as.POSIXct(NA), rows_in_db_after_update = 0, tab = tab, gps_id = as.numeric(NA) )
   }
 
 

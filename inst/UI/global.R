@@ -38,4 +38,4 @@
   
 
 
-# cleandb()
+cleandb()
