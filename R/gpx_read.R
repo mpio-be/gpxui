@@ -45,15 +45,24 @@ deviceID <- function(x) {
 
 #' read_all_waypoints
 #' @description  read all waypoints from the GPX directory and the gps id from DEVICE_ID.txt when it exists
-#' @param  ff  a data.frame  uploaded to the server by dirInput
+#' @param  ff  a data.frame  uploaded to the server by dirInput or 
+#'             a directory path containing gpx files. 
 #' @param int_names_only keep only numeric names
 #' @export
+#' @example
+#' g = system.file("Garmin65s", package = "gpxui") |> read_all_waypoints()
 read_all_waypoints <- function(ff,int_names_only = TRUE) {
 
+
+  if( !inherits(ff, 'data.frame') && fs::dir_exists(ff) ){
+    ff = data.frame(
+      datapath = list.files(ff, full.names = TRUE, recursive = TRUE)
+    )
+    ff$name = basename(ff$datapath)
+  }
   gid = deviceID(ff)
 
   ff = ff$datapath
-
   ff = ff[basename(ff) |> str_detect("gpx$")]
 
   if (length(ff) > 0) {
@@ -78,13 +87,22 @@ read_all_waypoints <- function(ff,int_names_only = TRUE) {
 
 #' read_all_tracks
 #' @description  read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
-#' @param  ff  a data.frame  uploaded to the server by dirInput
+#' @param  ff  a data.frame  uploaded to the server by dirInput or
+#'             a directory path containing gpx files.  
 #' @export
+#' @example
+#' g = system.file("Garmin65s", package = "gpxui") |> read_all_tracks()
 read_all_tracks <- function(ff) {
 
+  if( !inherits(ff, 'data.frame') && fs::dir_exists(ff) ){
+    ff = data.frame(
+      datapath = list.files(ff, full.names = TRUE, recursive = TRUE)
+    )
+    ff$name = basename(ff$datapath)
+  }
   gid = deviceID(ff)
-  ff = ff$datapath
 
+  ff = ff$datapath
   ff = ff[basename(ff) |> str_detect("gpx$")]
 
   if (length(ff) > 0) {

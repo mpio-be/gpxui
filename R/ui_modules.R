@@ -17,6 +17,8 @@
 
 #' server <- function(input, output) {
 #'   output$contents <- renderTable({
+#' x = input$fileIn
+#' assign("x", x, '.GlobalEnv')
 #' print(input$fileIn)
 #' if(!is.null(input$fileIn))
 #' data.table(input$fileIn)[, file.size(datapath), by = name]
