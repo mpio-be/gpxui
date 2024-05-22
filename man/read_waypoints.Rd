@@ -2,10 +2,26 @@
 % Please edit documentation in R/gpx_read.R
 \name{read_waypoints}
 \alias{read_waypoints}
-\title{read_waypoints}
+\alias{read_tracks}
+\title{Read Waypoints and Tracks}
 \usage{
 read_waypoints(x)
 }
+\arguments{
+\item{x}{A path to gpx files}
+}
+\value{
+A data.table
+}
 \description{
-read_waypoints
+These functions are a wrapper around sf::st_read, reading gpx files.
+When the file is corrupt or empty the functions returns an empty data.table with a warning.
+}
+\examples{
+f1 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
+f2 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_empty.gpx")
+read_waypoints(f1)
+read_waypoints(f2)
+read_tracks(f1)
+read_tracks(f2)
 }

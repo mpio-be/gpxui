@@ -1,25 +1,61 @@
 
-#' read_waypoints
+
+#' Read Waypoints and Tracks
+#'
+#' These functions are a wrapper around sf::st_read, reading gpx files. 
+#' When the file is corrupt or empty the functions returns an empty data.table with a warning. 
+#'
+#' @name read_waypoints
+#' @aliases read_waypoints read_tracks
+#'
+#' @param x A path to gpx files
+#'
+#' @return A data.table
+#' @examples
+#' f1 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
+#' f2 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_empty.gpx")
+#' read_waypoints(f1)
+#' read_waypoints(f2)
+#' read_tracks(f1)
+#' read_tracks(f2)
+
+
+#' @rdname read_waypoints
 #' @export
 read_waypoints <- function(x) {
-  w <- st_read(x, layer = "waypoints", quiet = TRUE)
-  xy <- st_coordinates(w) |> data.table()
-  setnames(xy, c("lon", "lat"))
-  d <- st_drop_geometry(w) |> setDT()
-  d <- d[, .(gps_point = name, datetime_ = time, ele)]
-  cbind(d, xy)
-
+  
+  w = try(st_read(x, layer = "waypoints", quiet = TRUE), silent = TRUE)
+  if (inherits(w, "sf")) {
+    xy = st_coordinates(w) |> data.table()
+    setnames(xy, c("lon", "lat"))
+    d = st_drop_geometry(w) |> setDT()
+    d = d[, .(gps_point = name, datetime_ = time, ele)]
+    o = cbind(d, xy)
+    if(nrow(o) == 0) message(basename(x) |> dQuote(), " does not contain any points!")
+  } else {
+    warning(basename(x) |> dQuote(), " is empty or corrupt!")
+    o = data.table(gps_point = character(), datetime_ = as.POSIXct(NULL), ele = numeric(), lon = numeric(), lat = numeric())
+  }
+  
+  o
 }
 
-#' read_tracks
+#' @rdname read_tracks
 #' @export
 read_tracks <- function(x) {
-  w <- st_read(x, layer = "track_points", quiet = TRUE)
-  xy <- st_coordinates(w) |> data.table()
-  setnames(xy, c("lon", "lat"))
-  d <- st_drop_geometry(w) |> setDT()
-  d <- d[, .(seg_id = track_seg_id, seg_point_id = track_seg_point_id, datetime_ = time, ele)]
-  cbind(d, xy)
+  w = try(st_read(x, layer = "track_points", quiet = TRUE), silent = TRUE)
+  if (inherits(w, "sf")) {
+    xy = st_coordinates(w) |> data.table()
+    setnames(xy, c("lon", "lat"))
+    d = st_drop_geometry(w) |> setDT()
+    d = d[, .(seg_id = track_seg_id, seg_point_id = track_seg_point_id, datetime_ = time, ele)]
+    o = cbind(d, xy)
+    if(nrow(o) == 0) message(basename(x) |> dQuote(), " does not contain any tracks!")
+  } else {
+     warning(basename(x) |> dQuote(), " is empty or corrupt!")
+    o = data.table(seg_id=integer(),seg_point_id=integer(),datetime_=as.POSIXct(NULL),ele=numeric(),lon=numeric(),lat=numeric())
+  }
+  o
 }
 
 
@@ -49,7 +85,7 @@ deviceID <- function(x) {
 #'             a directory path containing gpx files. 
 #' @param int_names_only keep only numeric names
 #' @export
-#' @example
+#' @examples
 #' g = system.file("Garmin65s", package = "gpxui") |> read_all_waypoints()
 read_all_waypoints <- function(ff,int_names_only = TRUE) {
 
@@ -90,7 +126,7 @@ read_all_waypoints <- function(ff,int_names_only = TRUE) {
 #' @param  ff  a data.frame  uploaded to the server by dirInput or
 #'             a directory path containing gpx files.  
 #' @export
-#' @example
+#' @examples
 #' g = system.file("Garmin65s", package = "gpxui") |> read_all_tracks()
 read_all_tracks <- function(ff) {
 

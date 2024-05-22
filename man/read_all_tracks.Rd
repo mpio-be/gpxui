@@ -7,8 +7,12 @@
 read_all_tracks(ff)
 }
 \arguments{
-\item{ff}{a data.frame  uploaded to the server by dirInput}
+\item{ff}{a data.frame  uploaded to the server by dirInput or
+a directory path containing gpx files.}
 }
 \description{
 read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
+}
+\examples{
+g = system.file("Garmin65s", package = "gpxui") |> read_all_tracks()
 }
