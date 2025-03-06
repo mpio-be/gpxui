@@ -45,7 +45,18 @@ st_bbox_all = function(x) {
   o <- lapply(x, st_bbox) |>
     lapply(st_as_sfc)
 
-  o <- do.call(st_union, o) |>
+  sfc_list <- lapply(x, function(obj) {
+    bb <- st_bbox(obj)
+    if (bb["xmin"] == bb["xmax"] || bb["ymin"] == bb["ymax"]) {
+      obj <- st_buffer(obj, dist = 1e-6)
+      bb <- st_bbox(obj)
+    }
+    st_as_sfc(bb)
+  })
+
+
+
+  o <- do.call(st_union, sfc_list) |>
     st_as_sf() |>
     st_bbox()
   

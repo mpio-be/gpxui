@@ -31,7 +31,9 @@
 
 #* Variables
   SERVER = "localhost"
+  SERVER = "de_fieldworker"
   DB = "tests"
+  DB = "FIELD_2025_NOLAatDUMMERSEE"
   GPS_IDS = 1:10
   EXPORT_TABLES = c("mid_points", "mid_tracks")
   
