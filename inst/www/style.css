@@ -4,19 +4,3 @@
   background-color: transparent;
   border: none;
 }
-
-.content, 
-.content-wrapper, 
-.container-fluid, 
-.content-header, 
-.row, 
-.col-sm-12 {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-
-#MAP {
-  margin: 0 !important;
-  padding: 0 !important;
-}

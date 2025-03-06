@@ -6,6 +6,7 @@ basemap <- function() {
     leaflet::addTiles(group = "OSM") |>
     leaflet::addLayersControl(
       overlayGroups = c("Tracks", "Points"),
+      position = "topleft",
       options = leaflet::layersControlOptions(collapsed = FALSE)
     ) |>
     leaflet::setView(sample(-150:150, 1), sample(-60:60, 1), zoom = 2)
