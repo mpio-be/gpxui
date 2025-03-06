@@ -75,8 +75,7 @@ function(input, output, session) {
             delay = 2000)
         )
     }
-  
-  
+   
   
   })
 
