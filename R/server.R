@@ -68,7 +68,11 @@ function(input, output, session) {
         toast(
           title = "Warning",
           body = h4("Nothing to show!"),
-          options = list(autohide = TRUE,close = FALSE)
+          options = list(
+            position = "topLeft",
+            autohide = TRUE,
+            close = FALSE,
+            delay = 2000)
         )
     }
   
