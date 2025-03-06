@@ -3,6 +3,9 @@
 gpx_server <- function() {
 
 function(input, output, session) {
+
+  session$allowReconnect(TRUE)
+
   observe(on.exit(assign("input", reactiveValuesToList(input), envir = .GlobalEnv)))
 
   #+ Read gpx, update db, update UI
@@ -23,8 +26,8 @@ function(input, output, session) {
   observeEvent(input$upload_GPX, {
     x <- run_update()
 
-    updateTextInput(session, "last_pts_dt", value = x[tab == "GPS_POINTS", last_entry_before_update |> as.character()])
-    updateTextInput(session, "last_trk_dt", value = x[tab == "GPS_TRACKS", last_entry_before_update |> as.character()])
+    updateTextInput(session, "last_pts_dt", value = x[tab == "GPS_POINTS", as.character(last_entry_before_update)])
+    updateTextInput(session, "last_trk_dt", value = x[tab == "GPS_TRACKS", as.character(last_entry_before_update)])
     updateNumericInput(session, "gps_id", value = na.omit(x$gps_id)[1])
   })
 
@@ -53,6 +56,16 @@ function(input, output, session) {
 
     leafletProxy("MAP") |>
       gpxmap(bbox, pts, trk)
+  
+    if (all(is.finite(bbox))) {
+    leafletProxy("MAP") |>
+      gpxmap(bbox, pts, trk)
+    } else {
+    # #TODO: info: no data
+    }
+  
+  
+  
   })
 
 

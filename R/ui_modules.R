@@ -153,7 +153,7 @@ points_summary <- function(x) {
       `N waypoints` = nrow(x) |> as.character(),
       `first point` = x$gps_point[1] |> as.character(),
       `last point` = x$gps_point[nrow(x)] |> as.character(),
-      `Area covered (km²)` = round(h, 2) |> as.character()
+      `Area covered (sqkm)` = round(h, 2) |> as.character()
     )
 
     o[, i := 1]

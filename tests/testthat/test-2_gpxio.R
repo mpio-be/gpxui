@@ -52,7 +52,9 @@ test_that("DT2gpx writes a gpx file", {
   
 
   outf = tempfile(fileext = ".gpx")
-  z = read_all_waypoints(dirout)
+  z = suppressWarnings({
+    read_all_waypoints(dirout)
+  })
 
 
   DT2gpx(z, nam = "gps_point", dest = outf) |> expect_true()

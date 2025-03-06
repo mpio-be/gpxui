@@ -9,8 +9,7 @@
   sapply(c( 
     "gpxui",
     "leaflet",
-    "gridlayout",
-    "bslib", 
+    "bs4Dash", 
     "sf",
     "dbo"
   ), require, character.only = TRUE, quietly = TRUE)

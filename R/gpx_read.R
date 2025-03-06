@@ -1,27 +1,35 @@
-
-
 #' Read Waypoints and Tracks
 #'
-#' These functions are a wrapper around sf::st_read, reading gpx files. 
-#' When the file is corrupt or empty the functions returns an empty data.table with a warning. 
+#' These functions are wrappers around `sf::st_read`, reading waypoints and tracks from GPX files.
+#' If the file is corrupt or empty, the functions return an empty `data.table` with a warning.
 #'
-#' @name read_waypoints
+#' @name read_gpx
 #' @aliases read_waypoints read_tracks
 #'
-#' @param x A path to gpx files
+#' @param x A path to a GPX file.
 #'
-#' @return A data.table
+#' @return A `data.table` containing:
+#' \describe{
+#'   \item{gps_point}{For waypoints: waypoint name. For tracks: track segment identifier.}
+#'   \item{datetime_}{Timestamp of the recorded point (if available).}
+#'   \item{ele}{Elevation in meters.}
+#'   \item{lon}{Longitude.}
+#'   \item{lat}{Latitude.}
+#' }
+#'
 #' @examples
 #' f1 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_20-APR-23.gpx")
 #' f2 = system.file(package = "gpxui", "Garmin65s", "GPX", "Waypoints_empty.gpx")
+#' f3 = system.file(package = "gpxui", "Garmin65s", "GPX", "Current", "Current.gpx")
 #' read_waypoints(f1)
 #' read_waypoints(f2)
 #' read_tracks(f1)
 #' read_tracks(f2)
-
-
-#' @rdname read_waypoints
+#' read_tracks(f3)
+#'
+#' @rdname read_gpx
 #' @export
+
 read_waypoints <- function(x) {
   
   w = try(st_read(x, layer = "waypoints", quiet = TRUE), silent = TRUE)
@@ -40,7 +48,7 @@ read_waypoints <- function(x) {
   o
 }
 
-#' @rdname read_tracks
+#' @rdname read_gpx
 #' @export
 read_tracks <- function(x) {
   w = try(st_read(x, layer = "track_points", quiet = TRUE), silent = TRUE)
