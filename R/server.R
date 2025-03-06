@@ -24,6 +24,8 @@ function(input, output, session) {
   })
 
   observeEvent(input$upload_GPX, {
+    
+    
     x <- run_update()
 
     updateTextInput(session, "last_pts_dt", value = x[tab == "GPS_POINTS", as.character(last_entry_before_update)])
@@ -46,6 +48,8 @@ function(input, output, session) {
 
     leafletProxy("MAP") |>
       gpxmap(bbox, pts, trk)
+    
+    
   })
 
   # on explore
@@ -61,7 +65,11 @@ function(input, output, session) {
     leafletProxy("MAP") |>
       gpxmap(bbox, pts, trk)
     } else {
-    # #TODO: info: no data
+        toast(
+          title = "Warning",
+          body = h4("Nothing to show!"),
+          options = list(autohide = TRUE,close = FALSE)
+        )
     }
   
   
@@ -95,7 +103,11 @@ function(input, output, session) {
 
 
   output$feedback <- renderUI({
+
     get_feedback()
+    
+   
+  
   })
 
 

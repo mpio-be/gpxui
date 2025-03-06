@@ -26,7 +26,7 @@
 
 #! Options
   options(shiny.autoreload = TRUE)
-  options(shiny.maxRequestSize = 10 * 1024^2)
+  options(shiny.maxRequestSize = 10 * 1024^3)
   options(dbo.tz = "Europe/Berlin")
 
 #* Variables

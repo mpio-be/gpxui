@@ -1,5 +1,5 @@
 Package: gpxui
-Title: Read and Show Garmin Gpx Files.
+Title: Read and Show GPX Files.
 Version: 0.0.3
 Authors@R: 
     person("Mihai", "Valcu", , "Mihai.Valcu@bi.mpg.de", role = c("aut", "cre"),
@@ -17,7 +17,8 @@ Imports:
     sf,
     xml2,
     leaflet,
-    bs4Dash
+    bs4Dash,
+    shinycssloaders
 Suggests:
     knitr,
     testthat (>= 3.0.0)
